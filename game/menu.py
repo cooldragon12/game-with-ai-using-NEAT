@@ -12,7 +12,7 @@ class Menu:
 
     def __init__(self, win):
         self.win = win
-        self.font = pygame.font.SysFont("verdana", 20)
+        self.font = pygame.font.Font("./assets/fonts/retropix.ttf", 50)
         self.run = True
         self.clock = pygame.time.Clock()
 
