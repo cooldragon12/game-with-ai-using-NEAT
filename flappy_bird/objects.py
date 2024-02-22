@@ -1,11 +1,12 @@
 import pygame
 import os
 import random
+from game import ASSET_DIR, MAP_ASSET_DIR, CHARACTER_ASSET_DIR
 
-BIRD_IMGS = [pygame.transform.scale2x(pygame.image.load(os.path.join("imgs", "bird1.png"))), pygame.transform.scale2x(pygame.image.load(os.path.join("imgs", "bird2.png"))), pygame.transform.scale2x(pygame.image.load(os.path.join("imgs", "bird3.png")))]
-PIPE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join("imgs", "pipe.png")))
-BASE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join("imgs", "base.png")))
-BG_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join("imgs", "bg.png")))
+BIRD_IMGS = [pygame.transform.scale2x(pygame.image.load(os.path.join(CHARACTER_ASSET_DIR, "bird\\bird1.png"))), pygame.transform.scale2x(pygame.image.load(os.path.join(CHARACTER_ASSET_DIR, "bird\\bird2.png"))), pygame.transform.scale2x(pygame.image.load(os.path.join(CHARACTER_ASSET_DIR, "bird\\bird3.png")))]
+PIPE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\pipe.png")))
+BASE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\base.png")))
+BG_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\bg.png")))
 STATS_FONT = pygame.font.SysFont("comicsans", 50)
 
 class Character:

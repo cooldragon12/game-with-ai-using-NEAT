@@ -1,6 +1,6 @@
 import pygame
 pygame.font.init()
-from flappy_bird.objects import BG_IMG,Pipe, Character, Floor,Background
+from flappy_bird.objects import Pipe, Character, Floor, Background
 from flappy_bird.maps import Map
 from game import WINDOW_WIDTH, WINDOW_HEIGHT
 from game.menu import Menu
