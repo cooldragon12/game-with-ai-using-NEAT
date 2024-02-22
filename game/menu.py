@@ -6,27 +6,24 @@ class Menu:
 
     OPTIONS = ["TEST AI", "SOLO", "AI VS PLAYER", "Exit"]
     TITLE = "FLAPPY BIRD"
-    SUBTITLE = "Choose a category:"
     INTRO = "Kain inom Gala Presents"
     SELECTED = 0
     run = True
 
     def __init__(self, win):
         self.win = win
-        self.font = pygame.font.SysFont("comicsans", 50)
+        self.font = pygame.font.SysFont("verdana", 20)
         self.run = True
         self.clock = pygame.time.Clock()
 
     def draw(self):
         self.win.fill((0, 0, 0))  # Fills the window with black
         # Text related
-        title = self.font.render(self.TITLE, 1, (255, 255, 255))
-        subtitle = self.font.render(self.SUBTITLE, 0.3, (255, 255, 255))
+        title = pygame.font.SysFont("verdana",50).render(self.TITLE, 1, (255, 255, 255))
         intro = self.font.render(self.INTRO, 0.2, (255, 255, 255))
         # Draws the title
+        self.win.blit(intro, (WINDOW_WIDTH/2 - intro.get_width()/2, 60))
         self.win.blit(title, (WINDOW_WIDTH/2 - title.get_width()/2, 80))
-        self.win.blit(subtitle, (WINDOW_WIDTH/2 - subtitle.get_width()/2, 150))
-        self.win.blit(intro, (WINDOW_WIDTH/2 - intro.get_width()/2, 200))
         # Draws the options
         for i in range(len(self.OPTIONS)):
             if i == self.SELECTED:
@@ -36,7 +33,6 @@ class Menu:
             self.win.blit(
                 text, (WINDOW_WIDTH/2 - text.get_width()/2, 250 + i*50))
         pygame.display.update()
-
     def run_menu(self):
         """Runs the menu loop"""
         while self.run:

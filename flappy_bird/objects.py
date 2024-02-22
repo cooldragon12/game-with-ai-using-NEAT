@@ -7,7 +7,7 @@ BIRD_IMGS = [pygame.transform.scale2x(pygame.image.load(os.path.join(CHARACTER_A
 PIPE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\pipe.png")))
 BASE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\base.png")))
 BG_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\bg.png")))
-STATS_FONT = pygame.font.SysFont("comicsans", 50)
+STATS_FONT = pygame.font.SysFont("comicsans", 17)
 
 class Character:
     """The base class for the characters in the game"""
@@ -57,6 +57,8 @@ class Character:
         self.img_count += 1 # Increments the image count every time the draw method is called
 
         self.img = self.IMGS[self.img_count // self.ANIMATION_TIME % self._image_count] # Divides the tick count by the animation time and gets the remainder to get the index of the image to display
+        # Think of the `self.img_count` as the time then you will divide the time by the animation time to get the remainder which will be the index of the image to display
+        
         # Computes the frames per animation
         if self.tilt <= -80:
             self.img = self.IMGS[1]

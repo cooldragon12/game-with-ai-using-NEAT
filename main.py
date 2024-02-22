@@ -32,7 +32,7 @@ def main():
         # If the menu is running
         if menu.run:
             menu.draw()
-            menu.run_menu()
+            menu.run_menu()    
             continue
 
         # Runs the game loop
