@@ -12,15 +12,19 @@ class Menu:
 
     def __init__(self, win):
         self.win = win
-        self.font = pygame.font.Font("./assets/fonts/retropix.ttf", 50)
+        # for text
+        self.font_text = pygame.font.Font("./assets/fonts/retropix.ttf", 20)
+        self.font_title = pygame.font.Font("./assets/fonts/retropix.ttf", 50)
+
         self.run = True
         self.clock = pygame.time.Clock()
 
     def draw(self):
         self.win.fill((0, 0, 0))  # Fills the window with black
         # Text related
-        title = pygame.font.SysFont("verdana",50).render(self.TITLE, 1, (255, 255, 255))
-        intro = self.font.render(self.INTRO, 0.2, (255, 255, 255))
+        title = self.font_title.render(
+            self.TITLE, 1, (255, 255, 255))
+        intro = self.font_text.render(self.INTRO, 0.2, (255, 255, 255))
         # Draws the title
         self.win.blit(intro, (WINDOW_WIDTH/2 - intro.get_width()/2, 60))
         self.win.blit(title, (WINDOW_WIDTH/2 - title.get_width()/2, 80))
@@ -33,6 +37,7 @@ class Menu:
             self.win.blit(
                 text, (WINDOW_WIDTH/2 - text.get_width()/2, 250 + i*50))
         pygame.display.update()
+
     def run_menu(self):
         """Runs the menu loop"""
         while self.run:
