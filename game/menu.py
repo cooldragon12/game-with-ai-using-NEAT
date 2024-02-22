@@ -31,9 +31,10 @@ class Menu:
         # Draws the options
         for i in range(len(self.OPTIONS)):
             if i == self.SELECTED:
-                text = self.font.render(self.OPTIONS[i], 1, (255, 0, 0))
+                text = self.font_text.render(self.OPTIONS[i], 1, (255, 0, 0))
             else:
-                text = self.font.render(self.OPTIONS[i], 1, (255, 255, 255))
+                text = self.font_text.render(
+                    self.OPTIONS[i], 1, (255, 255, 255))
             self.win.blit(
                 text, (WINDOW_WIDTH/2 - text.get_width()/2, 250 + i*50))
         pygame.display.update()
