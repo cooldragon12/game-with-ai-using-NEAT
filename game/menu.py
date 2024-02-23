@@ -1,5 +1,5 @@
 import pygame
-from game import WINDOW_WIDTH, WINDOW_HEIGHT
+from game import WINDOW_WIDTH, WINDOW_HEIGHT, TICK_RATE
 
 
 class Menu:
@@ -42,7 +42,7 @@ class Menu:
     def run_menu(self):
         """Runs the menu loop"""
         while self.run:
-            self.clock.tick(30)
+            self.clock.tick(TICK_RATE)
             self.draw()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

@@ -4,7 +4,7 @@
 
 import pygame
 from .objects import Pipe, Character, Floor, BG_IMG, STATS_FONT
-from  game import WINDOW_WIDTH
+from  game import WINDOW_WIDTH, TICK_RATE
 
 class Map:
     """Map Class handles the movement of the pipes, the ground and background images, also the game play
@@ -25,7 +25,7 @@ class Map:
     def control(self):
         """Runs the game loop"""
         while self.run:
-            self.clock.tick(30)
+            self.clock.tick(TICK_RATE)
             # Handles events happening 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
