@@ -1,8 +1,7 @@
-from cgi import test
 import pygame
 
 pygame.font.init()
-from flappy_bird.objects import Pipe, Character, Floor, Background,BG_IMG
+from flappy_bird.objects import Pipe, Character, Floor, BG_IMG
 from flappy_bird.maps import Map
 from game import *
 from game.menu import Menu
@@ -23,10 +22,8 @@ def main():
     floor = Floor(730, velocity=6)
     # Initiate the Pipes
     pipes = [Pipe(600)]
-    # Initiate the Background
-    score = 0
     # Initiate the Map
-    maps = Map(pipes, floor, BG_IMG )
+    maps = Map(pipes, floor, BG_IMG)
     run = True # Run the game
     # Notice: This run variable is used to control the game loop
     # the main loop
@@ -37,30 +34,25 @@ def main():
             menu.draw()
             menu.run_menu()    
             continue
-        
+        # The pause of the game is not yet working or the game loop 
         if menu.SELECTED == 0:
-            # Test AI
+            # Test AI 
             test = TestAI(win, maps, char)
-            test.loop()
+            test.run()
         elif menu.SELECTED == 1:
             # Solo
             solo = Solo(win, maps, char)
-            solo.loop()
+            solo.run()
         elif menu.SELECTED == 2:
             # AI vs Player
             ai_vs_player = AIvsPlayer(win, maps, char)
-            ai_vs_player.loop()
+            ai_vs_player.run()
 
         elif menu.SELECTED == 3:
             # Exit
             run = False
             break
 
-        
-        
-
-        
-        
     pygame.quit()
     quit()
 

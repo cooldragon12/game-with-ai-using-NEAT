@@ -8,44 +8,48 @@ class Environment:
         self.win = win
         self.map = maps
         self.char = char
-        self.run = True
+        self.is_running = True
+        self.is_finished = False
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font("./assets/fonts/retropix.ttf", 20)
         self.score = 0
 
     def loop(self):
         """Runs the game loop"""
-        while self.run:
+        while self.is_running:
             self.clock.tick(30)
-
+            
             self._controls_loop()
 
-            rem = []
-            add_pipe = False 
-            for pipe in self.map.pipes:
-                # If the pipe is off the screen, remove it
-                if pipe.x + pipe.PIPE_TOP.get_width() < 0:
-                    rem.append(pipe) 
-                # If the pipe is not passed and the character has passed it, add a new pipe
-                if not pipe.passed and pipe.x < self.char.x:
-                    pipe.passed = True
-                    add_pipe = True
-                
-                pipe.move()
-                
-            if add_pipe:
-                self.score += 1
-                self.map.pipes.append(Pipe(700))
-                add_pipe = False
-            
-            for r in rem:
-                self.map.pipes.remove(r)
-
             self._collided() # Handles the collides of the character with the floor and pipes
-            self.char.move() # Handles the movement of the character
-            self.map.floor.move() # Handles the movement of the floor
+            
+            if not self.is_finished: # This will stop the game loop if the game is finished
+                rem = []
+                add_pipe = False 
+                for pipe in self.map.pipes:
+                    # If the pipe is off the screen, remove it
+                    if pipe.x + pipe.PIPE_TOP.get_width() < 0:
+                        rem.append(pipe) 
+                    # If the pipe is not passed and the character has passed it, add a new pipe
+                    if not pipe.passed and pipe.x < self.char.x:
+                        pipe.passed = True
+                        add_pipe = True
+                    
+                    pipe.move()
+                    
+                if add_pipe:
+                    self.score += 1
+                    self.map.pipes.append(Pipe(700))
+                    add_pipe = False
+                
+                for r in rem:
+                    self.map.pipes.remove(r)
 
-            self.draw()
+                self.char.move() # Handles the movement of the character
+                self.map.floor.move() # Handles the movement of the floor
+
+                self.draw()
+            
 
     
     def collide_handler(self):
@@ -57,11 +61,11 @@ class Environment:
     
     def _collided(self):
         """This handles the collision of the character with the floor and pipes"""
-        if self.map.floor.collide(self.char):
-            self.collide_handler()
-        for pipe in self.map.pipes:
+        if self.map.floor.collide(self.char): # If the character collide with the floor
+            return self.collide_handler()
+        for pipe in self.map.pipes: # If the character collide with the pipes
             if pipe.collide(self.char):
-                self.collide_handler()
+                return self.collide_handler()
 
     def controls(self, event):
         """Handles the controls for the game"""
@@ -73,13 +77,25 @@ class Environment:
         """Handles the controls loop for the game"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.run = False
+                self.is_running = False
                 pygame.quit()
                 quit()
-            self.event = event
             self.controls(event)
+
+    def restart(self):
+        # Resart the game
+        if self.is_finished:
+            self.char.y = 350
+            self.map.pipes = [Pipe(600)]
+            self.score = 0
+            self.run()
+            
     
-    
+    def run(self):
+        """Runs the menu loop"""
+        self.is_finished = False
+        self.is_running = True
+        self.loop()
             
     def draw(self):
         self.win.blit(self.map.bg, (0, 0))
