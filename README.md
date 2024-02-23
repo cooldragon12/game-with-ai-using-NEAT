@@ -1,4 +1,4 @@
-# Flappy Tite - A Flappy Bird Clone with a NEAT AI
+# Flappy Bird - A Flappy Bird Clone with a NEAT AI
 
 This is a simple clone of the popular mobile game Flappy Bird, made using the Pygame library. The game is controlled by a NEAT AI, which is a genetic algorithm that evolves a population of neural networks to play the game.
 
