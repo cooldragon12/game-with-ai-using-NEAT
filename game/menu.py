@@ -7,7 +7,8 @@ class Menu:
     OPTIONS = ["TEST AI", "SOLO", "AI VS PLAYER", "Exit"]
     TITLE = "FLAPPY BIRD"
     INTRO = "KAIN INOM GALA PRESENTS..."
-    SELECTED = 0
+    selected_character = None
+    selected_mode = 0
     run = True
 
     def __init__(self, win):
@@ -61,20 +62,20 @@ class Menu:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
-                        self.SELECTED = (self.SELECTED + 1) % len(self.OPTIONS)
+                        self.selected_mode = (self.selected_mode + 1) % len(self.OPTIONS)
                     if event.key == pygame.K_UP:
-                        self.SELECTED = (self.SELECTED - 1) % len(self.OPTIONS)
+                        self.selected_mode = (self.selected_mode - 1) % len(self.OPTIONS)
                     if event.key == pygame.K_RETURN:
-                        self.selected_option()
+                        self.selected_mode_option()
 
-    def selected_option(self):
-        if self.SELECTED == 0:
+    def selected_mode_option(self):
+        if self.selected_mode == 0:
             print("TEST AI")
             self.run = False
-        elif self.SELECTED == 1:
+        elif self.selected_mode == 1:
             print("SOLO")
             self.run = False
-        elif self.SELECTED == 2:
+        elif self.selected_mode == 2:
             print("AI VS PLAYER")
             self.run = False
         else:

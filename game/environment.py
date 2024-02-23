@@ -1,10 +1,10 @@
 import pygame
 
-from flappy_bird.maps import Map
+from flappy_bird.maps import Map, MapHandler
 from flappy_bird.objects import Character, Pipe
 from game import WINDOW_WIDTH
 class Environment:
-    def __init__(self, win, maps:Map, char:Character):
+    def __init__(self, win, maps:MapHandler, char:Character):
         self.win = win
         self.map = maps
         self.char = char
@@ -39,7 +39,7 @@ class Environment:
                     
                 if add_pipe:
                     self.score += 1
-                    self.map.pipes.append(Pipe(700))
+                    self.map.pipes.append(self.map.create_pipe())
                     add_pipe = False
                 
                 for r in rem:
@@ -85,8 +85,10 @@ class Environment:
     def restart(self):
         # Resart the game
         if self.is_finished:
+            new_map = self.map.new_map()
+            self.map.change_map(new_map)
             self.char.y = 350
-            self.map.pipes = [Pipe(600)]
+            self.map.pipes = [self.map.create_pipe()]
             self.score = 0
             self.run()
             

@@ -2,7 +2,7 @@ import pygame
 
 pygame.font.init()
 from flappy_bird.objects import Pipe, Character, Floor, BG_IMG
-from flappy_bird.maps import Map
+from flappy_bird.maps import MapHandler
 from game import *
 from game.menu import Menu
 from game.modes import TestAI, Solo, AIvsPlayer
@@ -19,11 +19,9 @@ def main():
     # Intiate the intance of the Character
     char = Character(230, 350)
     # Initiate the base
-    floor = Floor(730, velocity=6)
-    # Initiate the Pipes
-    pipes = [Pipe(600)]
     # Initiate the Map
-    maps = Map(pipes, floor, BG_IMG)
+    maps = MapHandler()
+
     run = True # Run the game
     # Notice: This run variable is used to control the game loop
     # the main loop
@@ -35,20 +33,20 @@ def main():
             menu.run_menu()    
             continue
         # The pause of the game is not yet working or the game loop 
-        if menu.SELECTED == 0:
+        if menu.selected_mode == 0:
             # Test AI 
             test = TestAI(win, maps, char)
             test.run()
-        elif menu.SELECTED == 1:
+        elif menu.selected_mode == 1:
             # Solo
             solo = Solo(win, maps, char)
             solo.run()
-        elif menu.SELECTED == 2:
+        elif menu.selected_mode == 2:
             # AI vs Player
             ai_vs_player = AIvsPlayer(win, maps, char)
             ai_vs_player.run()
 
-        elif menu.SELECTED == 3:
+        elif menu.selected_mode == 3:
             # Exit
             run = False
             break

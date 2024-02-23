@@ -80,18 +80,18 @@ class Pipe:
     GAP = 200
     VEL = 5
 
-    def __init__(self, x):
+    def __init__(self, x, img = PIPE_IMG):
         self.x = x
         self.height = 0
         self.top = 0
         self.bottom = 0
 
-        self.PIPE_TOP = pygame.transform.flip(PIPE_IMG, False, True)
-        self.PIPE_BOTTOM = PIPE_IMG
+        self.PIPE_TOP = pygame.transform.flip(img, False, True)
+        self.PIPE_BOTTOM = img
 
         self.passed = False
         self.set_height()
-    
+
     def set_height(self):
         self.height = random.randrange(50, 450)
         self.top = self.height - self.PIPE_TOP.get_height()
@@ -124,6 +124,10 @@ class Pipe:
             return True
 
         return False
+    
+    def create_clone(self, x):
+        # Returns a new instance of the pipe with same parameters
+        return self.__class__(self.x + x, self.PIPE_BOTTOM)
     
 class Base:
     VEL = 5 # default velocity
@@ -162,7 +166,7 @@ class Floor(Base):
         self.VEL = self.VAL
     
     def collide(self, bird):
-        if bird.y + bird.img.get_height() >= self.y or bird.y < 0:
+        if bird.y + bird.img.get_height() >= self.y:
             return True
         return False
 
