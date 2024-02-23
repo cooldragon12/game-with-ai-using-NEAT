@@ -6,7 +6,7 @@ class Menu:
 
     OPTIONS = ["TEST AI", "SOLO", "AI VS PLAYER", "Exit"]
     TITLE = "FLAPPY BIRD"
-    INTRO = "Kain inom Gala Presents"
+    INTRO = "KAIN INOM GALA PRESENTS..."
     SELECTED = 0
     run = True
 
@@ -15,19 +15,21 @@ class Menu:
         # for text
         self.font_text = pygame.font.Font("./assets/fonts/retropix.ttf", 20)
         self.font_title = pygame.font.Font("./assets/fonts/retropix.ttf", 50)
-
+        self.background_image = pygame.image.load("./assets/menu/menu.png")
+        self.background_image = pygame.transform.scale(self.background_image, (WINDOW_WIDTH, WINDOW_HEIGHT))
         self.run = True
         self.clock = pygame.time.Clock()
 
     def draw(self):
         self.win.fill((0, 0, 0))  # Fills the window with black
+        self.win.blit(self.background_image, (0,0))
         # Text related
         title = self.font_title.render(
-            self.TITLE, 1, (255, 255, 255))
-        intro = self.font_text.render(self.INTRO, 0.2, (255, 255, 255))
+            self.TITLE, 1, "#F7DB6E")
+        intro = self.font_text.render(self.INTRO, 0.2, "#F7DB6E")
         # Draws the title
-        self.win.blit(intro, (WINDOW_WIDTH/2 - intro.get_width()/2, 60))
-        self.win.blit(title, (WINDOW_WIDTH/2 - title.get_width()/2, 80))
+        self.win.blit(intro, (WINDOW_WIDTH/2 - intro.get_width()/2, 170))
+        self.win.blit(title, (WINDOW_WIDTH/2 - title.get_width()/2, 220))
         # Draws the options
         for i in range(len(self.OPTIONS)):
             if i == self.SELECTED:
@@ -36,7 +38,7 @@ class Menu:
                 text = self.font_text.render(
                     self.OPTIONS[i], 1, (255, 255, 255))
             self.win.blit(
-                text, (WINDOW_WIDTH/2 - text.get_width()/2, 250 + i*50))
+                text, (WINDOW_WIDTH/2 - text.get_width()/2, 320 + i*50))
         pygame.display.update()
 
     def run_menu(self):
