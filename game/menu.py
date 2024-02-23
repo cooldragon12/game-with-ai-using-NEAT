@@ -17,6 +17,13 @@ class Menu:
         self.font_title = pygame.font.Font("./assets/fonts/retropix.ttf", 50)
         self.background_image = pygame.image.load("./assets/menu/menu.png")
         self.background_image = pygame.transform.scale(self.background_image, (WINDOW_WIDTH, WINDOW_HEIGHT))
+        self.button_solo = pygame.image.load("./assets/menu/button_solo.png")
+        self.button_solo = pygame.transform.scale(self.button_solo, (397/2, 40))
+        self.button_ai = pygame.image.load("./assets/menu/button_ai.png")
+        self.button_ai = pygame.transform.scale(self.button_ai, (397/2, 40))
+        self.button_multiplayer = pygame.image.load("./assets/menu/button_multiplayer.png")
+        self.button_multiplayer = pygame.transform.scale(self.button_multiplayer, (397/2, 40))
+        
         self.run = True
         self.clock = pygame.time.Clock()
 
@@ -32,13 +39,15 @@ class Menu:
         self.win.blit(title, (WINDOW_WIDTH/2 - title.get_width()/2, 220))
         # Draws the options
         for i in range(len(self.OPTIONS)):
-            if i == self.SELECTED:
-                text = self.font_text.render(self.OPTIONS[i], 1, (255, 0, 0))
-            else:
-                text = self.font_text.render(
-                    self.OPTIONS[i], 1, (255, 255, 255))
-            self.win.blit(
-                text, (WINDOW_WIDTH/2 - text.get_width()/2, 320 + i*50))
+            text = self.font_text.render(
+                "TEXT", 1, (255, 255, 255))
+            self.win.blit(self.button_ai, (WINDOW_WIDTH/2 - self.button_ai.get_width()/2, 320 + 0 - 10))
+            self.win.blit(self.button_solo, (WINDOW_WIDTH/2 - self.button_solo.get_width()/2, 320 + 50 - 10))
+            self.win.blit(self.button_multiplayer, (WINDOW_WIDTH/2 - self.button_multiplayer.get_width()/2, 320 + 100 - 10))
+            self.win.blit(self.font_text.render(
+                    "EXIT", 1, (255, 255, 255)), (WINDOW_WIDTH/2 - text.get_width()/2, 320 + 150 - 10))
+            
+            
         pygame.display.update()
 
     def run_menu(self):
