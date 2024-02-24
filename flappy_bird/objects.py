@@ -64,6 +64,9 @@ class Character:
             self.img = self.IMGS[1]
             self.img_count = self.ANIMATION_TIME*2
 
+        name = STATS_FONT.render(self.name, 1, (255, 255, 255))
+        win.blit(name, (self.x + 10, self.y - 40))
+
         rotated_image = pygame.transform.rotate(self.img, self.tilt)
         new_rect = rotated_image.get_rect(center=self.img.get_rect(topleft = (self.x, self.y)).center)
         win.blit(rotated_image, new_rect.topleft)
