@@ -50,18 +50,18 @@ class Menu:
             #         "EXIT", 1, (255, 255, 255)), (WINDOW_WIDTH/2 - text.get_width()/2, 320 + 150 - 10))
 
             if i == self.selected_mode:
-                selected_button = (pygame.transform.scale(self.OPTIONS[i], (200, 45))) # When selected, resize the button larger
+                selected_button = (pygame.transform.scale(self.OPTIONS[i], (180, 45))) # When selected, resize the button larger
 
             else:
                 selected_button = (
-                    pygame.transform.scale(self.OPTIONS[i], (175, 40)) # When not selected, resize the button smaller
+                    pygame.transform.scale(self.OPTIONS[i], (160, 40)) # When not selected, resize the button smaller
                 )
 
             self.win.blit(
                 selected_button,
                 (
                     WINDOW_WIDTH / 2 - selected_button.get_width() / 2, # Center the buttons
-                    320 + i * selected_button.get_height() + 10 * i
+                    320 + i * 40 + i * 5
                 )
             )
 
