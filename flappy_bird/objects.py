@@ -130,6 +130,7 @@ class Pipe:
         return self.__class__(self.x + x, self.PIPE_BOTTOM)
     
 class Base:
+    """ The base class for the floor and the background of the game """
     VEL = 5 # default velocity
     WIDTH = None
     IMG = None
