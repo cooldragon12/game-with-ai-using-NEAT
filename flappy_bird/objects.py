@@ -2,38 +2,45 @@ import pygame
 import os
 import random
 from game import ASSET_DIR, MAP_ASSET_DIR, CHARACTER_ASSET_DIR
+from .abstracts import CharacterAbstract
 
-BIRD_IMGS = [pygame.transform.scale2x(pygame.image.load(os.path.join(CHARACTER_ASSET_DIR, "bird\\bird1.png"))), pygame.transform.scale2x(pygame.image.load(os.path.join(CHARACTER_ASSET_DIR, "bird\\bird2.png"))), pygame.transform.scale2x(pygame.image.load(os.path.join(CHARACTER_ASSET_DIR, "bird\\bird3.png")))]
-PIPE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\pipe.png")))
-BASE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\base.png")))
-BG_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\bg.png")))
 STATS_FONT = pygame.font.SysFont("comicsans", 17)
 
-class Character:
-    """The base class for the characters in the game"""
-    IMGS = None
-    MAX_ROTATION = 25
-    ROT_VEL = 20
-    ANIMATION_TIME = 4
-    
-    def __init__(self, x, y, loaded_character=BIRD_IMGS, name = "Birdy"):
+class Character(CharacterAbstract):
+    MAX_ROTATION = 25 # The maximum rotation of the character
+    ROT_VEL = 20 # The rotation velocity
+    ANIMATION_TIME = 4 # The time for the animation
+    VEL = 5 # Default velocity
+    NAME = "Character"
+    images = []
+
+    def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.IMGS = loaded_character
-        self.name = name
+        self.IMGS = self.load_images()
         self.tilt = 0
         self.tick_count = 0
-        self.vel = 0
+        self.vel = 0 # velocity
         self.height = self.y
-        self.img_count = 0
-        self.img = self.IMGS[0]
+        self.img_count = 0 # Keeps track of the current image being displayed
+        self.img = self.IMGS[0] # Current image being displayed
 
+    def load_images(self):
+        """Loads the images of the character"""
+        # Checks if the images is not empty
+        if not self.images:
+            raise ValueError("The images property must not be empty")
+        return [pygame.transform.scale2x(pygame.image.load(os.path.join(CHARACTER_ASSET_DIR, self.images[i]))) for i in range(len(self.images))]
+        
+    
     def jump(self):
+        """The jump method of the character"""
         self.vel = -10.5
         self.tick_count = 0
         self.height = self.y
 
     def move(self):
+        """Manages the movement of the character"""
         self.tick_count += 1
 
         d = self.vel*self.tick_count + 1.5*self.tick_count**2 # how much the bird moves up or down 
@@ -64,7 +71,7 @@ class Character:
             self.img = self.IMGS[1]
             self.img_count = self.ANIMATION_TIME*2
 
-        name = STATS_FONT.render(self.name, 1, (255, 255, 255))
+        name = STATS_FONT.render(self.NAME, 1, (255, 255, 255))
         win.blit(name, (self.x + 10, self.y - 40))
 
         rotated_image = pygame.transform.rotate(self.img, self.tilt)
@@ -72,6 +79,7 @@ class Character:
         win.blit(rotated_image, new_rect.topleft)
 
     def get_mask(self):
+        """Returns the mask of the character"""
         return pygame.mask.from_surface(self.img)
     
     @property
@@ -83,7 +91,7 @@ class Pipe:
     GAP = 200
     VEL = 5
 
-    def __init__(self, x, img = PIPE_IMG):
+    def __init__(self, x, img):
         self.x = x
         self.height = 0
         self.top = 0
@@ -129,6 +137,7 @@ class Pipe:
         return False
     
     def create_clone(self, x):
+        """Creates a new instance of the pipe"""
         # Returns a new instance of the pipe with same parameters
         return self.__class__(self.x + x, self.PIPE_BOTTOM)
     
@@ -138,7 +147,7 @@ class Base:
     WIDTH = None
     IMG = None
 
-    def __init__(self, y, base = BASE_IMG, velocity = None):
+    def __init__(self, y, base, velocity = None):
         self.IMG = base
         self.WIDTH = self.IMG.get_width()
         self.y = y
@@ -163,24 +172,24 @@ class Base:
         win.blit(self.IMG, (self.x2, self.y))
 
 class Floor(Base):
-    VAL = 5
+    VEL = 5
 
-    def __init__(self, y, base = BASE_IMG, velocity = None):
+    def __init__(self, y, base , velocity = None):
         super().__init__(y, base, velocity)
-        self.VEL = self.VAL
+        self.VEL = velocity if velocity else self.VAL
     
     def collide(self, bird):
         if bird.y + bird.img.get_height() >= self.y:
             return True
         return False
 
-class Background(Base):
-    """The background of the game
+# class Background(Base):
+#     """The background of the game
     
-    This is not integrated yet need to modify to use the animation brackground
-    """
-    VAL = 5
+#     This is not integrated yet need to modify to use the animation brackground
+#     """
+#     VEL = 5
 
-    def __init__(self, y, bg = BG_IMG, velocity = None):
-        super().__init__(y, bg, velocity)
-        self.VEL = self.VAL
+#     def __init__(self, y, bg, velocity = None):
+#         super().__init__(y, bg, velocity)
+#         self.VEL = velocity if velocity else self.VEL

@@ -1,8 +1,8 @@
 import pygame
 
 pygame.font.init()
-from flappy_bird.objects import Pipe, Character, Floor, BG_IMG
 from flappy_bird.maps import MapHandler
+from flappy_bird.characters import Bird
 from game import *
 from game.menu import Menu
 from game.modes import TestAI, Solo, AIvsPlayer
@@ -17,10 +17,10 @@ def main():
 
     # This line of code from line 19 to 30 will insert into the menu class, for the map choice
     # Intiate the intance of the Character
-    char = Character(230, 350)
+    char = Bird(230, 350)
     # Initiate the base
     # Initiate the Map
-    maps = MapHandler()
+    maps = MapHandler()   
 
     run = True # Run the game
     # Notice: This run variable is used to control the game loop
