@@ -61,7 +61,7 @@ class Menu:
                 selected_button,
                 (
                     WINDOW_WIDTH / 2 - selected_button.get_width() / 2, # Center the buttons
-                    320 + i * selected_button.get_height()
+                    320 + i * selected_button.get_height() + 10 * i
                 )
             )
 
