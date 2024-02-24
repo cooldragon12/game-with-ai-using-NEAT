@@ -2,49 +2,43 @@
 # Use the Map Class to inherit in different maps
 # The Map class will handle the movement of the pipes, the ground and background images, also the game play
 
-from hmac import new
 import random
 import os
-from re import M
 import pygame
 
 from .objects import Pipe, Floor
+from .abstracts import MapAbstract
 from game import MAP_ASSET_DIR
-class MapAbstract:
-    """MapAbstract class will handle"""
-    currentInstances = 0
-    maxInstances = 1
-    
-    def __new__(cls):
-        if cls.currentInstances >= cls.maxInstances:
-            raise ValueError(f'You can only make {cls.maxInstances} instances.')
 
-        cls.currentInstances += 1
-        return super().__new__(cls)
-    
-class Map:
+class Map(MapAbstract):
     """Map Class handles the movement of the pipes, the ground and background images, also the game play
     
     Base class for the maps in the game
         """
     name = "Default"
-    pipe = Pipe(600, pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\pipe.png"))))
-    floor = Floor(730, pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\base.png"))), velocity=6)
-    bg = pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\bg.png")))
-    pipes = [pipe]
+    pipe:Pipe = None
+    floor:Floor = None
+    bg = None
+    pipes = []
     PIPE_GAP = 400
+    PIPE_VEL = 5
+    
+    def __init__(self):
+        self.load_assets()
+
     @property
     def maps_available(self):
+        """Returns the available maps"""
         return Map.__subclasses__()
-    
-    def __init__(self, pipe:Pipe=None, floor:Floor=None, bg=None):
-        self.floor = floor if floor else self.floor
-        self.bg = bg if bg else self.bg
-        self.pipes = [pipe] if [pipe] else [self.pipe]
 
     def create_pipe(self):
-        """Creates a new pipe instance and returns it with a different position"""
-        return self.pipe.create_clone(self.PIPE_GAP)
+        return self.pipes[0].create_clone(self.PIPE_GAP)
+    
+    def load_assets(self):
+        """Loads the assets of the map"""
+        self.pipes = [Pipe(600, pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, self.pipe))))]
+        self.floor = Floor(730, pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, self.floor))), velocity=self.PIPE_VEL)
+        self.bg = pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, self.bg)))
     
 class MapHandler(Map):
     """MapHandler class will handle the random generation of the pipes"""
@@ -75,18 +69,19 @@ class MapHandler(Map):
 # List here the maps that will be used in the game, inherit the Map class
 class Map1(Map):
     """Map1 class will handle the first map"""
-    def __init__(self):
-        self.name = "Map1"
-        self.pipe = Pipe(600, pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\pipe.png"))))
-        self.floor = Floor(730, pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\base.png"))), velocity=6)
-        self.bg = pygame.transform.scale((pygame.image.load(os.path.join(MAP_ASSET_DIR, "1\\bg.png"))), (288*2,512*1.7))
-        self.pipes = [self.pipe]
+    
+    name = "Map1"
+    pipe = "default\\pipe.png"
+    floor = "default\\floor.png"
+    bg = "default\\bg.png"
+    PIPE_VEL = 6
+    PIPE = 300
 
 class Map2(Map):
     """Map2 class will handle the second map"""
-    def __init__(self):
-        self.name = "Map2"
-        self.pipe = Pipe(600, pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\pipe.png"))))
-        self.floor = Floor(730, pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\base.png"))), velocity=6)
-        self.bg = pygame.transform.scale2x(pygame.image.load(os.path.join(MAP_ASSET_DIR, "default\\bg.png")))
-        self.pipes = [self.pipe]
+    name = "Map2"
+    pipe = "default\\pipe.png"
+    floor = "default\\floor.png"
+    bg = "1\\bg.png"
+    PIPE_VEL = 7
+    PIPE_GAP = 450
