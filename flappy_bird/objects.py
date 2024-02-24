@@ -7,6 +7,8 @@ from .abstracts import CharacterAbstract
 STATS_FONT = pygame.font.SysFont("comicsans", 17)
 
 class Character(CharacterAbstract):
+    """The character class for the game"""
+    
     MAX_ROTATION = 25 # The maximum rotation of the character
     ROT_VEL = 20 # The rotation velocity
     ANIMATION_TIME = 4 # The time for the animation
@@ -71,12 +73,18 @@ class Character(CharacterAbstract):
             self.img = self.IMGS[1]
             self.img_count = self.ANIMATION_TIME*2
 
+        # This renders the name over the head of the character
         name = STATS_FONT.render(self.NAME, 1, (255, 255, 255))
-        win.blit(name, (self.x + 10, self.y - 40))
-
+        # parameter contains the name of the character, anti-aliasing value, and the color of the font by RGB values
+        # NOTICE: Font will need to be changed
+        # Code below will render the name of the character over the head of the character
+        win.blit(name, (self.x + 10, self.y - 40)) # Renders it above and center of the character.
+        
+        # Rotates the image of the character by the tilt value
         rotated_image = pygame.transform.rotate(self.img, self.tilt)
-        new_rect = rotated_image.get_rect(center=self.img.get_rect(topleft = (self.x, self.y)).center)
-        win.blit(rotated_image, new_rect.topleft)
+        new_rect = rotated_image.get_rect(center=self.img.get_rect(topleft = (self.x, self.y)).center) # Rotates the image of the character by the tilt value
+        
+        win.blit(rotated_image, new_rect.topleft) # Draws the image of the character on the window
 
     def get_mask(self):
         """Returns the mask of the character"""
@@ -88,30 +96,37 @@ class Character(CharacterAbstract):
         return len(self.IMGS)
 
 class Pipe:
+    """The pipe class for the game"""
+    
     GAP = 200
+    """The gap between the top and bottom pipe"""
     VEL = 5
+    """The velocity of the pipe"""
 
     def __init__(self, x, img):
-        self.x = x
-        self.height = 0
-        self.top = 0
-        self.bottom = 0
+        self.x = x # The x position of the pipe
+        self.height = 0 # The height of the pipe
+        self.top = 0 # The top of the pipe
+        self.bottom = 0 # The bottom of the pipe
 
-        self.PIPE_TOP = pygame.transform.flip(img, False, True)
-        self.PIPE_BOTTOM = img
+        self.PIPE_TOP = pygame.transform.flip(img, False, True) # Flips the image of the pipe from the bottom to the top
+        self.PIPE_BOTTOM = img # The bottom pipe
 
-        self.passed = False
-        self.set_height()
+        self.passed = False # If the bird has passed the pipe
+        self.set_height() # Sets the height of the pipe
 
     def set_height(self):
+        """Sets the height of the pipe"""
         self.height = random.randrange(50, 450)
         self.top = self.height - self.PIPE_TOP.get_height()
         self.bottom = self.height + self.GAP
 
     def move(self):
+        """Moves the pipe to the left"""
         self.x -= self.VEL
     
     def draw(self, win):
+        """Draws the pipe on the window"""
         win.blit(self.PIPE_TOP, (self.x, self.top))
         win.blit(self.PIPE_BOTTOM, (self.x, self.bottom))
     
@@ -172,13 +187,16 @@ class Base:
         win.blit(self.IMG, (self.x2, self.y))
 
 class Floor(Base):
-    VEL = 5
+    """The floor of the game"""
+    VEL = 5 # default velocity
+    """The velocity of the floor movement from right to left"""
 
     def __init__(self, y, base , velocity = None):
         super().__init__(y, base, velocity)
         self.VEL = velocity if velocity else self.VAL
     
     def collide(self, bird):
+        """Returns True if the bird has collided with the floor"""
         if bird.y + bird.img.get_height() >= self.y:
             return True
         return False

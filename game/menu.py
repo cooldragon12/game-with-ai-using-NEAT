@@ -20,6 +20,7 @@ class Menu:
     def __init__(self, win):
         self.win = win
         # for text
+        # This need to change and need to be centralized
         self.font_text = pygame.font.Font("./assets/fonts/retropix.ttf", 20)
         self.font_title = pygame.font.Font("./assets/fonts/retropix.ttf", 50)
         self.background_image = pygame.image.load("./assets/menu/menu.png")
@@ -76,19 +77,20 @@ class Menu:
                 if event.type == pygame.QUIT:
                     pygame.quit()
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_DOWN:
+                if event.type == pygame.KEYDOWN: # Handles the keydown event
+                    if event.key == pygame.K_DOWN: # If the down arrow key is pressed
                         self.selected_mode = (self.selected_mode + 1) % len(
                             self.OPTIONS
-                        )
-                    if event.key == pygame.K_UP:
+                        ) # Increments the selected mode
+                    if event.key == pygame.K_UP: # If the up arrow key is pressed
                         self.selected_mode = (self.selected_mode - 1) % len(
                             self.OPTIONS
-                        )
-                    if event.key == pygame.K_RETURN:
+                        ) # Decrements the selected mode
+                    if event.key == pygame.K_RETURN: # If the return key is pressed
                         self.selected_mode_option()
 
     def selected_mode_option(self):
+        """Handles the selected mode"""
         if self.selected_mode == 0:
             print("TEST AI")
             self.run = False
