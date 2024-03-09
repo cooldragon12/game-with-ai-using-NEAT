@@ -11,7 +11,7 @@ class Character(CharacterAbstract):
     """The character class for the game"""
     
     MAX_ROTATION = 25 # The maximum rotation of the character
-    ROT_VEL = 20 # The rotation velocity
+    ROT_VEL = 1 # The rotation velocity
     ANIMATION_TIME = 4 # The time for the animation
     VEL = 5 # Default velocity
     NAME = "Character"
@@ -46,21 +46,21 @@ class Character(CharacterAbstract):
         """Manages the movement of the character"""
         self.tick_count += 1
 
-        d = self.vel*self.tick_count + 1.5*self.tick_count**2 # how much the bird moves up or down 
+        d = self.vel*self.tick_count + 1.4*self.tick_count**2 # how much the bird moves up or down 
 
-        if d >= 16: # terminal velocity
-            d = 16 # if the bird is moving down faster than 16 pixels, it will not move faster than 16 pixels
+        if d >= 14: # terminal velocity
+            d = 14 # if the bird is moving down faster than 14 pixels, it will not move faster than 16 pixels
 
         if d < 0: # if the bird is moving up, it will move up a little bit more
             d -= 2
         self.y = self.y + d
 
-        if d < 0 or self.y < self.height + 50:
+        if d < 13:
             if self.tilt < self.MAX_ROTATION:
                 self.tilt = self.MAX_ROTATION
         else:
-            if self.tilt > -90:
-                self.tilt -= self.ROT_VEL
+            if self.tilt > -50 and self.tick_count > 10:
+                self.tilt -= self.ROT_VEL/1.3
 
     def draw(self, win):
         """Manages the animation of the sprites"""
