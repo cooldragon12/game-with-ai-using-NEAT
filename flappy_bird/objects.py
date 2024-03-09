@@ -1,3 +1,4 @@
+import numpy as np
 import pygame
 import os
 import random
@@ -98,8 +99,9 @@ class Character(CharacterAbstract):
 class Pipe:
     """The pipe class for the game"""
     
-    GAP = 200
-    """The gap between the top and bottom pipe"""
+    # Generate pipe gaps based on a range
+    GAP = random.randrange(220,280)
+
     VEL = 5
     """The velocity of the pipe"""
 
