@@ -14,9 +14,11 @@ class Environment:
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font("./assets/fonts/retropix.ttf", 20)
         self.score = 0
+        self.selected_option = 0
 
     def loop(self):
         """Runs the game loop"""
+        print("game loop start")
         while self.is_running:
             #print(self.is_running)
             self.clock.tick(TICK_RATE) # Sets the tick rate of the game, TICK_RATE reference from game/__init__.py
