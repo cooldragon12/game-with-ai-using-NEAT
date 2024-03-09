@@ -18,6 +18,7 @@ class Environment:
     def loop(self):
         """Runs the game loop"""
         while self.is_running:
+            #print(self.is_running)
             self.clock.tick(TICK_RATE) # Sets the tick rate of the game, TICK_RATE reference from game/__init__.py
             
             self._controls_loop() # Handles the controls loop for the game
@@ -52,6 +53,7 @@ class Environment:
                 self.map.floor.move() # Handles the movement of the floor
 
                 self.draw() # Draws the game
+        print("game is no longer running")
             
 
     
@@ -95,6 +97,14 @@ class Environment:
             self.map.pipes = [self.map.create_pipe()]
             self.score = 0
             self.run()
+    
+    def exit_mode(self):
+        """Exits mode if game is finished"""
+        print("exit mode")
+        self.is_running = False
+        print(self.is_running)
+        # Calls loop to stop the while loop and return to menu
+        self.loop()
             
     
     def run(self):

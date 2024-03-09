@@ -21,6 +21,8 @@ class Solo(Environment):
             if self.is_finished:
                 if event.key == pygame.K_SPACE:
                     return self.restart()
+                if event.key == pygame.K_ESCAPE:
+                    return self.exit_mode()
             if not self.is_finished:     
                 if event.key == pygame.K_SPACE:
                     return self.char.jump()
