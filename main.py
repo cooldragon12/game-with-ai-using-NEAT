@@ -32,7 +32,7 @@ def main():
             char = Bird(230, 350)
             maps = MapHandler()  
             test = TestAI(win, maps, char)
-            test.run()
+            test.run(maps)
             # Deletes all instances related to mode for a full restart
             del test, char, maps
             # Proceed to loop menu again

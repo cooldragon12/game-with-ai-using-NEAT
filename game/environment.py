@@ -3,6 +3,7 @@ import pygame
 from flappy_bird.maps import MapHandler
 from flappy_bird.objects import Character, Pipe
 from game import WINDOW_WIDTH, TICK_RATE
+import time
 class Environment:
     """The environment class for the game"""
     def __init__(self, win, maps:MapHandler, char:Character):
@@ -15,6 +16,7 @@ class Environment:
         self.font = pygame.font.Font("./assets/fonts/retropix.ttf", 20)
         self.score = 0
         self.selected_option = 0
+        self.last_screenshot_time =time.time()
 
     def loop(self):
         """Runs the game loop"""
