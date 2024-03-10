@@ -1,7 +1,8 @@
+from calendar import c
 import pygame
 
-from flappy_bird.maps import Map, MapHandler
-from flappy_bird.objects import Character, Pipe
+from flappy_bird.maps import MapHandler
+from flappy_bird.objects import Character
 from game import WINDOW_WIDTH
 class Environment:
     def __init__(self, win, maps:MapHandler, char:Character):
@@ -112,3 +113,7 @@ class Environment:
         self.char.draw(self.win)
         pygame.display.set_caption("Flappy Bird")
         pygame.display.update()
+    
+    @classmethod
+    def modes(cls):
+        return cls.__subclasses__()

@@ -86,7 +86,16 @@ class Character(CharacterAbstract):
     def _image_count(self):
         """Returns the number of images in the sprite list"""
         return len(self.IMGS)
+    
+    @classmethod
+    def characters_available(cls):
+        """Returns the characters available"""
+        return cls.__subclasses__()
 
+    def set_default_pos(self):
+        self.x = 230
+        self.y = 350
+        
 class Pipe:
     GAP = 200
     VEL = 5

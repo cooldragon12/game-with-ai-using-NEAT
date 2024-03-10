@@ -1,8 +1,10 @@
 import pygame
 from game import WINDOW_WIDTH, WINDOW_HEIGHT, TICK_RATE
+from flappy_bird.characters import *
+from flappy_bird.objects import Character
 
 
-class Menu:
+class  Menu:
 
     OPTIONS = [
         pygame.image.load("./assets/menu/button_ai.png"),  # This is the TEST AI button
@@ -13,7 +15,7 @@ class Menu:
     ]
     TITLE = "FLAPPY BIRD"
     INTRO = "KAIN INOM GALA PRESENTS..."
-    selected_character = None
+    
     selected_mode = 0
     run = True
 
@@ -22,36 +24,28 @@ class Menu:
         # for text
         self.font_text = pygame.font.Font("./assets/fonts/retropix.ttf", 20)
         self.font_title = pygame.font.Font("./assets/fonts/retropix.ttf", 50)
-        self.background_image = pygame.image.load("./assets/menu/menu.png")
         self.background_image = pygame.transform.scale(
-            self.background_image, (WINDOW_WIDTH, WINDOW_HEIGHT)
+            pygame.image.load("./assets/menu/menu.png"), (WINDOW_WIDTH, WINDOW_HEIGHT)
         )
-
+        self.selected_character = Character.characters_available()[0](50, 670)
         self.run = True
         self.clock = pygame.time.Clock()
 
     def draw(self):
         self.win.fill((0, 0, 0))  # Fills the window with black
         self.win.blit(self.background_image, (0, 0))
-        # Text related
+        # Draws the title and intro ============
         title = self.font_title.render(self.TITLE, 1, "#F7DB6E")
         intro = self.font_text.render(self.INTRO, 0.2, "#F7DB6E")
         # Draws the title
         self.win.blit(intro, (WINDOW_WIDTH / 2 - intro.get_width() / 2, 170))
         self.win.blit(title, (WINDOW_WIDTH / 2 - title.get_width() / 2, 220))
+        # ======================================
+        # Selection related code
         # Draws the options
         for i in range(len(self.OPTIONS)):
-            # text = self.font_text.render("TEXT", 1, (255, 255, 255))
-
-            # self.win.blit(self.button_ai, (WINDOW_WIDTH/2 - self.button_ai.get_width()/2, 320 + 0 - 10))
-            # self.win.blit(self.button_solo, (WINDOW_WIDTH/2 - self.button_solo.get_width()/2, 320 + 50 - 10))
-            # self.win.blit(self.button_multiplayer, (WINDOW_WIDTH/2 - self.button_multiplayer.get_width()/2, 320 + 100 - 10))
-            # self.win.blit(self.font_text.render(
-            #         "EXIT", 1, (255, 255, 255)), (WINDOW_WIDTH/2 - text.get_width()/2, 320 + 150 - 10))
-
             if i == self.selected_mode:
                 selected_button = (pygame.transform.scale(self.OPTIONS[i], (180, 45))) # When selected, resize the button larger
-
             else:
                 selected_button = (
                     pygame.transform.scale(self.OPTIONS[i], (160, 40)) # When not selected, resize the button smaller
@@ -64,6 +58,17 @@ class Menu:
                     320 + i * 40 + i * 5
                 )
             )
+
+        # Draws the character selection
+        if self.selected_mode == 4:
+            self.selected_character.draw(self.win)
+        else:
+            self.win.blit(
+                self.selected_character.img,
+                (50, 670),
+            )
+        
+
 
         pygame.display.update()
 
@@ -78,15 +83,16 @@ class Menu:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
-                        self.selected_mode = (self.selected_mode + 1) % len(
+                        self.selected_mode = (self.selected_mode + 1) % (len(
                             self.OPTIONS
-                        )
+                        ) + 2)
                     if event.key == pygame.K_UP:
-                        self.selected_mode = (self.selected_mode - 1) % len(
+                        self.selected_mode = (self.selected_mode - 1) % (len(
                             self.OPTIONS
-                        )
+                        ) + 2)
                     if event.key == pygame.K_RETURN:
                         self.selected_mode_option()
+                        break
 
     def selected_mode_option(self):
         if self.selected_mode == 0:
@@ -98,6 +104,15 @@ class Menu:
         elif self.selected_mode == 2:
             print("AI VS PLAYER")
             self.run = False
-        else:
+        elif self.selected_mode == 3:
             self.run = False
             pygame.quit()
+        elif self.selected_mode == 4:
+            # Pass the character choice to the game
+            pass
+        
+        self.selected_character.set_default_pos()
+
+
+class CharacterMenu:
+    pass
