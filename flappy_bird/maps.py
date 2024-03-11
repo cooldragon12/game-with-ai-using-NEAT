@@ -45,10 +45,11 @@ class MapHandler(Map):
 
     def new_map(self):
         # Generate a new map
-        map_selected = random.choice(self.maps_available)()
+        map_selected = random.choice(self.maps_available)() # Randomly selects a map
         return map_selected
     
     def change_map(self,map):
+        # Change the map
         self.name = map.name
         self.pipe = map.pipe
         self.floor = map.floor
@@ -57,11 +58,11 @@ class MapHandler(Map):
         return self
 
     def __init__(self):
-        map_now = self.new_map()
-        self.change_map(map_now)
+        map_now = self.new_map() # Generates a new map upon initialization
+        self.change_map(map_now) # Applying the new map
 
     def __call__(self) -> Map:
-        return self.map_now
+        return self.map_now # Returns the current map
     
     def __next__(self):
         return self.new_map()
