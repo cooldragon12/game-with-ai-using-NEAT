@@ -25,26 +25,26 @@ class Bird(Character):
 class Cat(Character):
     MAX_ROTATION = 25
     ROT_VEL = 20
-    ANIMATION_TIME = 4
+    ANIMATION_TIME = 1
     VEL = 5
     NAME = "PussyCat"
-    images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
+    images = ["cat\\cat1.png", "cat\\cat2.png", "cat\\cat3.png"]
 
-class Whale(Character):
+class Racoon(Character):
     MAX_ROTATION = 25
     ROT_VEL = 20
-    ANIMATION_TIME = 4
+    ANIMATION_TIME = 2
     VEL = 5
-    NAME = "Sperm"
-    images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
+    NAME = "Thiefy"
+    images = ["racoon\\racoon1.png", "racoon\\racoon2.png", "racoon\\racoon3.png"]
 
-class Jellyfish(Character):
+class Bunny(Character):
     MAX_ROTATION = 25
     ROT_VEL = 20
     ANIMATION_TIME = 4
     VEL = 5
     NAME = "Glowy"
-    images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
+    images = ["bunny\\bunny1.png", "bunny\\bunny1.png"]
 
 class Duck(Character):
     MAX_ROTATION = 25
@@ -52,7 +52,7 @@ class Duck(Character):
     ANIMATION_TIME = 4
     VEL = 5
     NAME = "Key"
-    images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
+    images = ["duck\\duck1.png", "duck\\duck2.png", "duck\\duck3.png"]
 
 class Fish(Character):
     MAX_ROTATION = 25
@@ -60,7 +60,7 @@ class Fish(Character):
     ANIMATION_TIME = 4
     VEL = 5
     NAME = "Nemo"
-    images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
+    images = ["fish\\fish1.png", "fish\\fish2.png", "fish\\fish3.png"]
 
 class Ghost(Character):
     MAX_ROTATION = 25
@@ -68,4 +68,4 @@ class Ghost(Character):
     ANIMATION_TIME = 4
     VEL = 5
     NAME = "Naghost"
-    images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
+    images = ["ghost\\ghost1.png", "ghost\\ghost1.png"]

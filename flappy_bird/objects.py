@@ -30,7 +30,7 @@ class Character(CharacterAbstract):
         # Checks if the images is not empty
         if not self.images:
             raise ValueError("The images property must not be empty")
-        return [pygame.transform.scale2x(pygame.image.load(os.path.join(CHARACTER_ASSET_DIR, self.images[i]))) for i in range(len(self.images))]
+        return [pygame.transform.scale(pygame.image.load(os.path.join(CHARACTER_ASSET_DIR, self.images[i])),(34*2,24*2)) for i in range(len(self.images))]
         
     
     def jump(self):
