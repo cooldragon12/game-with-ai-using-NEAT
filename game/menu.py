@@ -27,7 +27,8 @@ class  Menu:
         self.background_image = pygame.transform.scale(
             pygame.image.load("./assets/menu/menu.png"), (WINDOW_WIDTH, WINDOW_HEIGHT)
         )
-        self.selected_character = Character.characters_available()[0](50, 670)
+        self.current_character = 0
+        self.selected_character = Character.characters_available()[self.current_character](50, 670)
         self.run = True
         self.clock = pygame.time.Clock()
 
@@ -60,14 +61,18 @@ class  Menu:
             )
 
         # Draws the character selection
-        if self.selected_mode == 4:
-            self.selected_character.draw(self.win)
+        
+        if self.selected_mode == 3:
+            for i, character in enumerate(Character.characters_available()):
+                if i == self.current_character:
+                    self.selected_character = character(50, 670)
         else:
             self.win.blit(
                 self.selected_character.img,
                 (50, 670),
             )
         
+        self.selected_character.draw(self.win)
 
 
         pygame.display.update()
@@ -83,16 +88,30 @@ class  Menu:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
+                        # When the cursor is on the options
                         self.selected_mode = (self.selected_mode + 1) % (len(
                             self.OPTIONS
-                        ) + 2)
+                        ) + 1)
                     if event.key == pygame.K_UP:
+                        # When the cursor is on the options
                         self.selected_mode = (self.selected_mode - 1) % (len(
                             self.OPTIONS
-                        ) + 2)
+                        ) + 1)
                     if event.key == pygame.K_RETURN:
                         self.selected_mode_option()
                         break
+
+                    if self.selected_mode == 3:
+                        # when the cursor is on the character selection
+                        if event.key == pygame.K_LEFT:
+                            self.current_character = (self.current_character - 1) % len(
+                                Character.characters_available()
+                            )
+                        if event.key == pygame.K_RIGHT:
+                            self.current_character = (self.current_character + 1) % len(
+                                Character.characters_available()
+                            )
+
 
     def selected_mode_option(self):
         if self.selected_mode == 0:
@@ -105,14 +124,8 @@ class  Menu:
             print("AI VS PLAYER")
             self.run = False
         elif self.selected_mode == 3:
-            self.run = False
-            pygame.quit()
-        elif self.selected_mode == 4:
             # Pass the character choice to the game
             pass
         
         self.selected_character.set_default_pos()
 
-
-class CharacterMenu:
-    pass

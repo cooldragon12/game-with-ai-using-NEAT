@@ -4,6 +4,16 @@
 
 from .objects import Character
 
+# class Cat(Character):
+#     # Sample character 
+#     # MAX_ROTATION = 25
+#     # ROT_VEL = 20
+#     # ANIMATION_TIME = 4
+#     # VEL = 5
+#     # NAME = "Cat"
+#     # images = ["char_folder_name\\char1.png", "char_folder_name\\char2.png", "char_folder_name\\char3.png]
+#     pass
+
 class Bird(Character):
     MAX_ROTATION = 25
     ROT_VEL = 20
@@ -13,26 +23,49 @@ class Bird(Character):
     images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
 
 class Cat(Character):
-    # Sample character 
-    # MAX_ROTATION = 25
-    # ROT_VEL = 20
-    # ANIMATION_TIME = 4
-    # VEL = 5
-    # NAME = "Cat"
-    # images = ["char_folder_name\\char1.png", "char_folder_name\\char2.png", "char_folder_name\\char3.png]
-    pass
+    MAX_ROTATION = 25
+    ROT_VEL = 20
+    ANIMATION_TIME = 4
+    VEL = 5
+    NAME = "PussyCat"
+    images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
 
 class Whale(Character):
-    pass
+    MAX_ROTATION = 25
+    ROT_VEL = 20
+    ANIMATION_TIME = 4
+    VEL = 5
+    NAME = "Sperm"
+    images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
 
 class Jellyfish(Character):
-    pass
+    MAX_ROTATION = 25
+    ROT_VEL = 20
+    ANIMATION_TIME = 4
+    VEL = 5
+    NAME = "Glowy"
+    images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
 
 class Duck(Character):
-    pass
+    MAX_ROTATION = 25
+    ROT_VEL = 20
+    ANIMATION_TIME = 4
+    VEL = 5
+    NAME = "Key"
+    images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
 
 class Fish(Character):
-    pass
+    MAX_ROTATION = 25
+    ROT_VEL = 20
+    ANIMATION_TIME = 4
+    VEL = 5
+    NAME = "Nemo"
+    images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
 
 class Ghost(Character):
-    pass
+    MAX_ROTATION = 25
+    ROT_VEL = 20
+    ANIMATION_TIME = 4
+    VEL = 5
+    NAME = "Naghost"
+    images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
