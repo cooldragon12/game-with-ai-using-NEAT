@@ -70,7 +70,6 @@ class MapHandler(Map):
 # List here the maps that will be used in the game, inherit the Map class
 class MapDefault(Map):
     """Map1 class will handle the first map"""
-    
     name = "Map1"
     pipe = "default\\pipe.png"
     floor = "default\\floor.png"

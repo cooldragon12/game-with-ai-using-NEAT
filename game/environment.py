@@ -1,7 +1,8 @@
+from calendar import c
 import pygame
 
 from flappy_bird.maps import MapHandler
-from flappy_bird.objects import Character, Pipe
+from flappy_bird.objects import Character
 from game import WINDOW_WIDTH, TICK_RATE
 import time
 class Environment:
@@ -16,7 +17,7 @@ class Environment:
         self.font = pygame.font.Font("./assets/fonts/retropix.ttf", 20)
         self.score = 0
         self.selected_option = 0
-        self.last_screenshot_time =time.time()
+        self.last_screenshot_time = time.time()
 
     def loop(self):
         """Runs the game loop"""
@@ -116,6 +117,7 @@ class Environment:
         self.is_finished = False
         self.is_running = True
         self.loop()
+        self.clear()
             
     def draw(self):
         self.win.blit(self.map.bg, (0, 0))
@@ -130,3 +132,11 @@ class Environment:
         self.char.draw(self.win)
         pygame.display.set_caption("Flappy Bird")
         pygame.display.update()
+    
+    @classmethod
+    def modes(cls):
+        return cls.__subclasses__()
+    
+    def clear(self):
+        # Deletes all instances related to mode for a full restart
+        del self, self.char, self.map

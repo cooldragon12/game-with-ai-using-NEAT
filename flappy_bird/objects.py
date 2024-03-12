@@ -33,7 +33,7 @@ class Character(CharacterAbstract):
         # Checks if the images is not empty
         if not self.images:
             raise ValueError("The images property must not be empty")
-        return [pygame.transform.scale2x(pygame.image.load(os.path.join(CHARACTER_ASSET_DIR, self.images[i]))) for i in range(len(self.images))]
+        return [pygame.transform.scale(pygame.image.load(os.path.join(CHARACTER_ASSET_DIR, self.images[i])),(34*2,24*2)) for i in range(len(self.images))]
         
     
     def jump(self):
@@ -75,11 +75,11 @@ class Character(CharacterAbstract):
             self.img_count = self.ANIMATION_TIME*2
 
         # This renders the name over the head of the character
-        #name = STATS_FONT.render(self.NAME, 1, (255, 255, 255))
+        name = STATS_FONT.render(self.NAME, 1, (255, 255, 255))
         # parameter contains the name of the character, anti-aliasing value, and the color of the font by RGB values
         # NOTICE: Font will need to be changed
         # Code below will render the name of the character over the head of the character
-        #win.blit(name, (self.x + 10, self.y - 40)) # Renders it above and center of the character.
+        win.blit(name, (self.x + 10, self.y - 40)) # Renders it above and center of the character.
         
         # Rotates the image of the character by the tilt value
         rotated_image = pygame.transform.rotate(self.img, self.tilt)
@@ -95,7 +95,16 @@ class Character(CharacterAbstract):
     def _image_count(self):
         """Returns the number of images in the sprite list"""
         return len(self.IMGS)
+    
+    @classmethod
+    def characters_available(cls):
+        """Returns the characters available"""
+        return cls.__subclasses__()
 
+    def set_default_pos(self):
+        self.x = 230
+        self.y = 350
+        
 class Pipe:
     """The pipe class for the game"""
     

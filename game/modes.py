@@ -1,5 +1,4 @@
 from flappy_bird.objects import Pipe
-from flappy_bird.characters import Bird
 from .environment import Environment
 import pygame
 from game import WINDOW_WIDTH, WINDOW_HEIGHT, TICK_RATE
@@ -11,16 +10,16 @@ FLOOR = 730
 gen = 0
 class TestAI(Environment):
     # Modified the draw to be able to draw multiple birds
-    def draw(self,win, birds,maps, score, gen, pipe_ind):
-        win.blit(maps.bg, (0, 0))
+    def draw(self,win, birds, score, gen, pipe_ind):
+        win.blit(self.map.bg, (0, 0))
 
-        for pipe in maps.pipes:
+        for pipe in self.map.pipes:
             pipe.draw(win)
         
         text = self.font.render("Score: " + str(score), 1, (255,255,255)) 
         win.blit(text, (WINDOW_WIDTH - 10 - text.get_width(), 10))
 
-        maps.floor.draw(win)
+        self.map.floor.draw(win)
         for bird in birds:
             # draw bird
             bird.draw(win)
@@ -35,7 +34,7 @@ class TestAI(Environment):
         pygame.display.update()
 
     # Run was modified to not use the default loop. Neat requires to run the loop/eval_genomes on its own
-    def run(self,maps):
+    def run(self):
         """
         runs the NEAT algorithm to train a neural network to play flappy bird.
         :param config_file: location of config file
@@ -76,7 +75,7 @@ class TestAI(Environment):
                 genome.fitness = 0  # start with fitness level of 0
                 net = neat.nn.FeedForwardNetwork.create(genome, config)
                 nets.append(net)
-                birds.append(Bird(230,350))
+                birds.append(self.char.__class__(230,350))
                 ge.append(genome)
             score = 0
 
@@ -87,7 +86,7 @@ class TestAI(Environment):
                 clock.tick(30)                
                 pipe_ind = 0
                 if len(birds) > 0:
-                    if len(maps.pipes) > 1 and birds[0].x > maps.pipes[0].x + maps.pipes[0].PIPE_TOP.get_width():  # determine whether to use the first or second
+                    if len(self.map.pipes) > 1 and birds[0].x > self.map.pipes[0].x + self.map.pipes[0].PIPE_TOP.get_width():  # determine whether to use the first or second
                         pipe_ind = 1 # pipe on the screen for neural network input
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -100,15 +99,15 @@ class TestAI(Environment):
                     bird.move()
 
                     # send bird location, top pipe location and bottom pipe location and determine from network whether to jump or not
-                    output = nets[birds.index(bird)].activate((bird.y, abs(bird.y - maps.pipes[pipe_ind].height), abs(bird.y - maps.pipes[pipe_ind].bottom)))
+                    output = nets[birds.index(bird)].activate((bird.y, abs(bird.y - self.map.pipes[pipe_ind].height), abs(bird.y - self.map.pipes[pipe_ind].bottom)))
                     
 
                     if output[0] > 0.5:  # we use a tanh activation function so result will be between -1 and 1. if over 0.5 jump
                         bird.jump()
                 rem = []
                 add_pipe = False
-                maps.floor.move() # Handles the movement of the floor
-                for pipe in maps.pipes:
+                self.map.floor.move() # Handles the movement of the floor
+                for pipe in self.map.pipes:
                     pipe.move()
                     # check for collision
                     for bird in birds:
@@ -130,11 +129,11 @@ class TestAI(Environment):
                     # can add this line to give more reward for passing through a pipe (not required)
                     for genome in ge:
                         genome.fitness += 5
-                    maps.pipes.append(self.map.create_pipe())
+                    self.map.pipes.append(self.map.create_pipe())
 
                 # Remove pipes that are off screen
                 for r in rem:
-                    maps.pipes.remove(r)
+                    self.map.pipes.remove(r)
 
                 for bird in birds:
                     if bird.y + bird.img.get_height() - 10 >= FLOOR or bird.y < -50:
@@ -147,11 +146,11 @@ class TestAI(Environment):
                     pickle.dump(nets[0],open("best.pickle", "wb"))
                     break'''
                 
-                self.draw(win,birds,maps,score,gen,pipe_ind)
+                self.draw(win,birds,score,gen,pipe_ind)
 
             #At this point, all birds are extinct, but new generations will spawn
             # Remove all pipes when starting a new generation
-            maps.pipes = [maps.create_pipe()]
+            self.map.pipes = [self.map.create_pipe()]
 
         # Full evolution is complete
         # Run for up to 50 generations.
