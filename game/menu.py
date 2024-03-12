@@ -22,6 +22,7 @@ class  Menu:
     def __init__(self, win):
         self.win = win
         # for text
+        # This need to change and need to be centralized
         self.font_text = pygame.font.Font("./assets/fonts/retropix.ttf", 20)
         self.font_title = pygame.font.Font("./assets/fonts/retropix.ttf", 50)
         self.background_image = pygame.transform.scale(
@@ -114,6 +115,7 @@ class  Menu:
 
 
     def selected_mode_option(self):
+        """Handles the selected mode"""
         if self.selected_mode == 0:
             print("TEST AI")
             self.run = False

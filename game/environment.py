@@ -3,8 +3,10 @@ import pygame
 
 from flappy_bird.maps import MapHandler
 from flappy_bird.objects import Character
-from game import WINDOW_WIDTH
+from game import WINDOW_WIDTH, TICK_RATE
+import time
 class Environment:
+    """The environment class for the game"""
     def __init__(self, win, maps:MapHandler, char:Character):
         self.win = win
         self.map = maps
@@ -14,13 +16,17 @@ class Environment:
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font("./assets/fonts/retropix.ttf", 20)
         self.score = 0
+        self.selected_option = 0
+        self.last_screenshot_time = time.time()
 
     def loop(self):
         """Runs the game loop"""
+        print("game loop start")
         while self.is_running:
-            self.clock.tick(30)
+            #print(self.is_running)
+            self.clock.tick(TICK_RATE) # Sets the tick rate of the game, TICK_RATE reference from game/__init__.py
             
-            self._controls_loop()
+            self._controls_loop() # Handles the controls loop for the game
 
             self._collided() # Handles the collides of the character with the floor and pipes
             
@@ -39,17 +45,20 @@ class Environment:
                     pipe.move()
                     
                 if add_pipe:
+                    # If the character has passed the pipe, add a new pipe and increment the score
                     self.score += 1
                     self.map.pipes.append(self.map.create_pipe())
                     add_pipe = False
-                
+
+                # Remove the pipes that are off the screen
                 for r in rem:
                     self.map.pipes.remove(r)
 
                 self.char.move() # Handles the movement of the character
                 self.map.floor.move() # Handles the movement of the floor
 
-                self.draw()
+                self.draw() # Draws the game
+        print("game is no longer running")
             
 
     
@@ -84,6 +93,7 @@ class Environment:
             self.controls(event)
 
     def restart(self):
+        """Restarts the game if the game is finished"""
         # Resart the game
         if self.is_finished:
             new_map = self.map.new_map()
@@ -92,6 +102,14 @@ class Environment:
             self.map.pipes = [self.map.create_pipe()]
             self.score = 0
             self.run()
+    
+    def exit_mode(self):
+        """Exits mode if game is finished"""
+        print("exit mode")
+        self.is_running = False
+        print(self.is_running)
+        # Calls loop to stop the while loop and return to menu
+        self.loop()
             
     
     def run(self):
@@ -99,6 +117,7 @@ class Environment:
         self.is_finished = False
         self.is_running = True
         self.loop()
+        self.clear()
             
     def draw(self):
         self.win.blit(self.map.bg, (0, 0))
@@ -117,3 +136,7 @@ class Environment:
     @classmethod
     def modes(cls):
         return cls.__subclasses__()
+    
+    def clear(self):
+        # Deletes all instances related to mode for a full restart
+        del self, self.char, self.map

@@ -12,10 +12,9 @@ from flappy_bird.maps import MapHandler
 
 def main():
     # Initiate the window
-    win = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    win = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))    
     # Initiate the menu
     menu = Menu(win)
-
     # This line of code from line 19 to 30 will insert into the menu class, for the map choice
     # Intiate the intance of the Character
     # char = Bird(230, 350)
@@ -44,6 +43,9 @@ def main():
 
     pygame.quit()
     quit()
+
+    
+
 
 
 if __name__ == "__main__":
