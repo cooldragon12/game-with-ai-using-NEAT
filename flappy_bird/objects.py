@@ -74,12 +74,12 @@ class Character(CharacterAbstract):
             self.img = self.IMGS[1]
             self.img_count = self.ANIMATION_TIME*2
 
-        # This renders the name over the head of the character
-        name = STATS_FONT.render(self.NAME, 1, (255, 255, 255))
-        # parameter contains the name of the character, anti-aliasing value, and the color of the font by RGB values
-        # NOTICE: Font will need to be changed
-        # Code below will render the name of the character over the head of the character
-        win.blit(name, (self.x + 10, self.y - 40)) # Renders it above and center of the character.
+        # # This renders the name over the head of the character
+        # name = STATS_FONT.render(self.NAME, 1, (255, 255, 255))
+        # # parameter contains the name of the character, anti-aliasing value, and the color of the font by RGB values
+        # # NOTICE: Font will need to be changed
+        # # Code below will render the name of the character over the head of the character
+        # win.blit(name, (self.x + 10, self.y - 40)) # Renders it above and center of the character.
         
         # Rotates the image of the character by the tilt value
         rotated_image = pygame.transform.rotate(self.img, self.tilt)
