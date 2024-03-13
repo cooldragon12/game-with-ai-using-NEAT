@@ -69,16 +69,16 @@ class MapHandler(Map):
 
 # List here the maps that will be used in the game, inherit the Map class
 class MapDefault(Map):
-    """Map1 class will handle the first map"""
-    name = "Map1"
+    """MapDefault class will handle the first map"""
+    name = "MapDefault"
     pipe = "default\\pipe.png"
     floor = "default\\floor.png"
     bg = "default\\bg.png"
     PIPE_VEL = 6
-    PIPE = 300
+    PIPE_GAP = 400
 
 class MapFantasy(Map):
-    """Map2 class will handle the second map"""
+    """MapFantasy class will handle map 1"""
     name = "Fantasy"
     pipe = "1\\pipe.png"
     floor = "default\\floor.png"
@@ -87,7 +87,7 @@ class MapFantasy(Map):
     PIPE_GAP = 400
 
 class MapCity(Map):
-    """Map3 class will handle the second map"""
+    """MapCity class will handle the map 2"""
     name = "City"
     pipe = "2\\pipe.png"
     floor = "2\\floor.png"
@@ -96,7 +96,7 @@ class MapCity(Map):
     PIPE_GAP = 400
 
 class MapSnow(Map):
-    """Map4 class will handle the second map"""
+    """MapSnow class will handle map 3"""
     name = "Snow"
     pipe = "3\\pipe.png"
     floor = "3\\floor.png"
@@ -105,16 +105,16 @@ class MapSnow(Map):
     PIPE_GAP = 400
 
 class MapNight(Map):
-    """Map5 class will handle the second map"""
+    """MapNight class will handle map 4"""
     name = "Night"
     pipe = "4\\pipe.png"
     floor = "4\\floor.png"
     bg = "4\\bg.png"
     PIPE_VEL = 6
-    PIPE_GAP = 400
+    PIPE_GAP = 200
 
 class MapWater(Map):
-    """Map6 class will handle the second map"""
+    """MapWater class will handle map 5"""
     name = "Water"
     pipe = "5\\pipe.png"
     floor = "5\\floor.png"
