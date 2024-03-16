@@ -35,11 +35,17 @@ def main():
         # The pause of the game is not yet working or the game loop 
         mode = Environment.modes()[menu.selected_mode](win, maps, menu.selected_character)
         mode.run()
+        
+        if mode.is_finished == True and mode.is_running == False:
+            mode.clear()
+            del mode
+            menu.run = True
+            continue
 
-        if menu.selected_mode == 3:
-            # Exit
-            run = False
-            break
+        # if menu.selected_mode == 3:
+        #     # Exit
+        #     run = False
+        #     break
 
     pygame.quit()
     quit()

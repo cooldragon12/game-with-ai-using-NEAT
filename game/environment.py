@@ -109,7 +109,7 @@ class Environment:
         self.is_running = False
         print(self.is_running)
         # Calls loop to stop the while loop and return to menu
-        self.loop()
+        # removed the self.loop()
             
     
     def run(self):
@@ -117,7 +117,6 @@ class Environment:
         self.is_finished = False
         self.is_running = True
         self.loop()
-        self.clear()
             
     def draw(self):
         self.win.blit(self.map.bg, (0, 0))
@@ -138,5 +137,9 @@ class Environment:
         return cls.__subclasses__()
     
     def clear(self):
-        # Deletes all instances related to mode for a full restart
-        del self, self.char, self.map
+        self.char.x = 700 # temporary solutions which clear out the board
+        self.char.y = 600
+        self.char = None
+        self.map = None
+        
+        pygame.display.update()

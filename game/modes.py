@@ -193,6 +193,9 @@ class Solo(Environment):
                 if event.key == pygame.K_SPACE:
                     return self.char.jump()
                 
+                # if event.key == pygame.K_ESCAPE:
+                #     return self.game_over_prompt()
+                
     def game_over_prompt(self):
         """This will prompt the game over message"""
         # draw game over title
