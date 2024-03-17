@@ -16,14 +16,14 @@ class Map(MapAbstract):
 
     Base class for the maps in the game
     """
-
+    PIPE_VEL = Pipe.VEL
+    
     name = "Default"
     pipe: Pipe = None
     floor: Floor = None
     bg = None
     pipes = []
     PIPE_GAP = 400
-    PIPE_VEL = 5
 
     def __init__(self):
         self.load_assets()
@@ -89,71 +89,71 @@ class MapHandler(Map):
         return self.new_map()
 
 
-# List here the maps that will be used in the game, inherit the Map class
-# class MapDefault(Map):
-#     """MapDefault class will handle the first map"""
+#Listed here the maps that will be used in the game, inherit the Map class
+class MapDefault(Map):
+    """MapDefault class will handle the first map"""
 
-#     name = "MapDefault"
-#     pipe = "default\\pipe.png"
-#     floor = "default\\floor.png"
-#     bg = "default\\bg.png"
-#     PIPE_VEL = 6
-#     PIPE_GAP = 400
-
-
-# class MapFantasy(Map):
-#     """MapFantasy class will handle map 1"""
-
-#     name = "Fantasy"
-#     pipe = "1\\pipe.png"
-#     floor = "default\\floor.png"
-#     bg = "1\\bg.png"
-#     PIPE_VEL = 6
-#     PIPE_GAP = 400
+    name = "MapDefault"
+    pipe = "default\\pipe.png"
+    floor = "default\\floor.png"
+    bg = "default\\bg.png"
+    PIPE_VEL = Pipe.VEL
+    PIPE_GAP = 400
 
 
-# class MapCity(Map):
-#     """MapCity class will handle the map 2"""
+class MapFantasy(Map):
+    """MapFantasy class will handle map 1"""
 
-#     name = "City"
-#     pipe = "2\\pipe.png"
-#     floor = "2\\floor.png"
-#     bg = "2\\bg.png"
-#     PIPE_VEL = 6
-#     PIPE_GAP = 400
-
-
-# class MapSnow(Map):
-#     """MapSnow class will handle map 3"""
-
-#     name = "Snow"
-#     pipe = "3\\pipe.png"
-#     floor = "3\\floor.png"
-#     bg = "3\\bg.png"
-#     PIPE_VEL = 6
-#     PIPE_GAP = 400
+    name = "Fantasy"
+    pipe = "1\\pipe.png"
+    floor = "default\\floor.png"
+    bg = "1\\bg.png"
+    PIPE_VEL = Pipe.VEL
+    PIPE_GAP = 400
 
 
-# class MapNight(Map):
-#     """MapNight class will handle map 4"""
+class MapCity(Map):
+    """MapCity class will handle the map 2"""
 
-#     name = "Night"
-#     pipe = "4\\pipe.png"
-#     floor = "4\\floor.png"
-#     bg = "4\\bg.png"
-#     PIPE_VEL = 6
-#     PIPE_GAP = 200
+    name = "City"
+    pipe = "2\\pipe.png"
+    floor = "2\\floor.png"
+    bg = "2\\bg.png"
+    PIPE_VEL = Pipe.VEL
+    PIPE_GAP = 400
 
 
-# class MapWater(Map):
-#     """MapWater class will handle map 5"""
+class MapSnow(Map):
+    """MapSnow class will handle map 3"""
 
-#     name = "Water"
-#     pipe = "5\\pipe.png"
-#     floor = "5\\floor.png"
-#     bg = "5\\bg.png"
-#     PIPE_VEL = 6
-#     PIPE_GAP = 400
+    name = "Snow"
+    pipe = "3\\pipe.png"
+    floor = "3\\floor.png"
+    bg = "3\\bg.png"
+    PIPE_VEL = Pipe.VEL
+    PIPE_GAP = 400
+
+
+class MapNight(Map):
+    """MapNight class will handle map 4"""
+
+    name = "Night"
+    pipe = "4\\pipe.png"
+    floor = "4\\floor.png"
+    bg = "4\\bg.png"
+    PIPE_VEL = Pipe.VEL
+    PIPE_GAP = 200
+
+
+class MapWater(Map):
+    """MapWater class will handle map 5"""
+
+    name = "Water"
+    pipe = "5\\pipe.png"
+    floor = "5\\floor.png"
+    bg = "5\\bg.png"
+    PIPE_VEL = Pipe.VEL
+    PIPE_GAP = 400
 
 
 class MapBatman(Map):
@@ -163,5 +163,5 @@ class MapBatman(Map):
     pipe = "6\\pipe.png"
     floor = "6\\floor.png"
     bg = "6\\bg.png"
-    PIPE_VEL = 6
+    PIPE_VEL = Pipe.VEL
     PIPE_GAP = 400

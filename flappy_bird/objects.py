@@ -5,7 +5,23 @@ import random
 from game import ASSET_DIR, MAP_ASSET_DIR, CHARACTER_ASSET_DIR
 from .abstracts import CharacterAbstract
 
+
 STATS_FONT = pygame.font.SysFont("comicsans", 17)
+
+class Velocity:
+    """Velocity class to store VEL"""
+
+    # PIPE_VEL = 5
+    # CHARACTER_VEL = 5
+
+    # ONLY FLOOR_VEL affects the speed of the whole game, so I removed PIPE_VEL and CHARACTER_VEL for now
+    # Used one VEL variable instead of 3
+    VEL = 5
+
+    @classmethod
+    def set_velocity(cls, vel):
+        """Set the velocity"""
+        cls.VEL = vel
 
 class Character(CharacterAbstract):
     """The character class for the game"""
@@ -13,7 +29,7 @@ class Character(CharacterAbstract):
     MAX_ROTATION = 25 # The maximum rotation of the character
     ROT_VEL = 1 # The rotation velocity
     ANIMATION_TIME = 4 # The time for the animation
-    VEL = 5 # Default velocity
+    VEL = Velocity.VEL # Default velocity
     NAME = "Character"
     images = []
 
@@ -104,14 +120,14 @@ class Character(CharacterAbstract):
     def set_default_pos(self):
         self.x = 230
         self.y = 350
-        
-class Pipe:
-    """The pipe class for the game"""
-    
-    # Generate pipe gaps based on a range
-    GAP = random.randrange(220,280)
 
-    VEL = 5
+class Pipe():
+    """The pipe class for the game"""
+
+    # Generate pipe gaps based on a range
+    GAP = random.randrange(210,280)
+
+    VEL = Velocity.VEL  # default velocity
     """The velocity of the pipe"""
 
     def __init__(self, x, img):
@@ -135,12 +151,12 @@ class Pipe:
     def move(self):
         """Moves the pipe to the left"""
         self.x -= self.VEL
-    
+
     def draw(self, win):
         """Draws the pipe on the window"""
         win.blit(self.PIPE_TOP, (self.x, self.top))
         win.blit(self.PIPE_BOTTOM, (self.x, self.bottom))
-    
+
     def collide(self, bird):
         """Returns True if a collision occurs
         
@@ -161,15 +177,15 @@ class Pipe:
             return True
 
         return False
-    
+
     def create_clone(self, x):
         """Creates a new instance of the pipe"""
         # Returns a new instance of the pipe with same parameters
         return self.__class__(self.x + x, self.PIPE_BOTTOM)
-    
+
 class Base:
     """ The base class for the floor and the background of the game """
-    VEL = 5 # default velocity
+    VEL = Velocity.VEL # default velocity
     WIDTH = None
     IMG = None
 
@@ -199,13 +215,13 @@ class Base:
 
 class Floor(Base):
     """The floor of the game"""
-    VEL = 5 # default velocity
+    VEL = Velocity.VEL  # default velocity
     """The velocity of the floor movement from right to left"""
 
     def __init__(self, y, base , velocity = None):
         super().__init__(y, base, velocity)
         self.VEL = velocity if velocity else self.VAL
-    
+
     def collide(self, bird):
         """Returns True if the bird has collided with the floor"""
         if bird.y + bird.img.get_height() >= self.y:
@@ -214,7 +230,7 @@ class Floor(Base):
 
 # class Background(Base):
 #     """The background of the game
-    
+
 #     This is not integrated yet need to modify to use the animation brackground
 #     """
 #     VEL = 5
