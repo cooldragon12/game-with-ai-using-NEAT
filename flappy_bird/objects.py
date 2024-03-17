@@ -4,24 +4,9 @@ import os
 import random
 from game import ASSET_DIR, MAP_ASSET_DIR, CHARACTER_ASSET_DIR
 from .abstracts import CharacterAbstract
-
+from flappy_bird import VELOCITY_DEFAULT
 
 STATS_FONT = pygame.font.SysFont("comicsans", 17)
-
-class Velocity:
-    """Velocity class to store VEL"""
-
-    # PIPE_VEL = 5
-    # CHARACTER_VEL = 5
-
-    # ONLY FLOOR_VEL affects the speed of the whole game, so I removed PIPE_VEL and CHARACTER_VEL for now
-    # Used one VEL variable instead of 3
-    VEL = 5
-
-    @classmethod
-    def set_velocity(cls, vel):
-        """Set the velocity"""
-        cls.VEL = vel
 
 class Character(CharacterAbstract):
     """The character class for the game"""
@@ -29,7 +14,7 @@ class Character(CharacterAbstract):
     MAX_ROTATION = 25 # The maximum rotation of the character
     ROT_VEL = 1 # The rotation velocity
     ANIMATION_TIME = 4 # The time for the animation
-    VEL = Velocity.VEL # Default velocity
+    VEL = 6 # Default velocity
     NAME = "Character"
     images = []
 
@@ -39,7 +24,6 @@ class Character(CharacterAbstract):
         self.IMGS = self.load_images()
         self.tilt = 0
         self.tick_count = 0
-        self.vel = 0 # velocity
         self.height = self.y
         self.img_count = 0 # Keeps track of the current image being displayed
         self.img = self.IMGS[0] # Current image being displayed
@@ -54,7 +38,7 @@ class Character(CharacterAbstract):
     
     def jump(self):
         """The jump method of the character"""
-        self.vel = -10.5
+        self.VEL = -10.5
         self.tick_count = 0
         self.height = self.y
 
@@ -62,7 +46,7 @@ class Character(CharacterAbstract):
         """Manages the movement of the character"""
         self.tick_count += 1
 
-        d = self.vel*self.tick_count + 1.4*self.tick_count**2 # how much the bird moves up or down 
+        d = self.VEL*self.tick_count + 1.4*self.tick_count**2 # how much the bird moves up or down 
 
         if d >= 14: # terminal velocity
             d = 14 # if the bird is moving down faster than 14 pixels, it will not move faster than 16 pixels
@@ -121,16 +105,16 @@ class Character(CharacterAbstract):
         self.x = 230
         self.y = 350
 
-class Pipe():
+class Pipe:
     """The pipe class for the game"""
 
     # Generate pipe gaps based on a range
-    GAP = random.randrange(210,280)
+    GAP = random.randrange(210,280) # Gap between upper pipe and lower pipe
 
-    VEL = Velocity.VEL  # default velocity
+    VEL = None  # default velocity
     """The velocity of the pipe"""
 
-    def __init__(self, x, img):
+    def __init__(self, x, img, velocity = VELOCITY_DEFAULT):
         self.x = x # The x position of the pipe
         self.height = 0 # The height of the pipe
         self.top = 0 # The top of the pipe
@@ -142,6 +126,7 @@ class Pipe():
         self.passed = False # If the bird has passed the pipe
         self.set_height() # Sets the height of the pipe
 
+        self.VEL = velocity
     def set_height(self):
         """Sets the height of the pipe"""
         self.height = random.randrange(50, 450)
@@ -178,14 +163,14 @@ class Pipe():
 
         return False
 
-    def create_clone(self, x):
+    def create_clone(self, x, velocity = None):
         """Creates a new instance of the pipe"""
         # Returns a new instance of the pipe with same parameters
-        return self.__class__(self.x + x, self.PIPE_BOTTOM)
+        return self.__class__(self.x + x, self.PIPE_BOTTOM, velocity)
 
 class Base:
     """ The base class for the floor and the background of the game """
-    VEL = Velocity.VEL # default velocity
+    VEL = VELOCITY_DEFAULT # default velocity
     WIDTH = None
     IMG = None
 
@@ -215,12 +200,12 @@ class Base:
 
 class Floor(Base):
     """The floor of the game"""
-    VEL = Velocity.VEL  # default velocity
+    VEL = VELOCITY_DEFAULT  # default velocity
     """The velocity of the floor movement from right to left"""
 
     def __init__(self, y, base , velocity = None):
         super().__init__(y, base, velocity)
-        self.VEL = velocity if velocity else self.VAL
+        self.VEL = velocity if velocity else VELOCITY_DEFAULT
 
     def collide(self, bird):
         """Returns True if the bird has collided with the floor"""

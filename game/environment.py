@@ -1,6 +1,6 @@
 from calendar import c
 import pygame
-
+from flappy_bird import SPEED_CHANGE_EVERY
 from flappy_bird.maps import MapHandler
 from flappy_bird.objects import Character
 from game import WINDOW_WIDTH, TICK_RATE
@@ -49,7 +49,9 @@ class Environment:
                     self.score += 1
                     self.map.pipes.append(self.map.create_pipe())
                     add_pipe = False
-
+                    
+                    if self.score % SPEED_CHANGE_EVERY == 0:
+                        self.map.set_speed_map(self.map.PIPE_VEL + 1) # Increase the speed of the map every 5 points
                 # Remove the pipes that are off the screen
                 for r in rem:
                     self.map.pipes.remove(r)

@@ -1,8 +1,7 @@
-from flappy_bird.objects import Pipe
 from .environment import Environment
 import pygame
-from game import WINDOW_WIDTH, WINDOW_HEIGHT, TICK_RATE
-import os, time
+from game import WINDOW_WIDTH
+from flappy_bird import SPEED_CHANGE_EVERY
 import neat
 
 
@@ -31,6 +30,9 @@ class TestAI(Environment):
         score_label = self.font.render("Alive: " + str(len(birds)),1,(255,255,255))
         win.blit(score_label, (10, 50))
 
+        # speed
+        score_label = self.font.render("Speed: " + str(self.map.PIPE_VEL),1,(255,255,255))
+        win.blit(score_label, (10, 100))
         pygame.display.update()
 
     # Run was modified to not use the default loop. Neat requires to run the loop/eval_genomes on its own
@@ -88,6 +90,7 @@ class TestAI(Environment):
                 if len(birds) > 0:
                     if len(self.map.pipes) > 1 and birds[0].x > self.map.pipes[0].x + self.map.pipes[0].PIPE_TOP.get_width():  # determine whether to use the first or second
                         pipe_ind = 1 # pipe on the screen for neural network input
+                    
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         run = False
@@ -108,7 +111,6 @@ class TestAI(Environment):
                 add_pipe = False
                 self.map.floor.move() # Handles the movement of the floor
                 for pipe in self.map.pipes:
-                    pipe.move()
                     # check for collision
                     for bird in birds:
                         if pipe.collide(bird):
@@ -123,6 +125,8 @@ class TestAI(Environment):
                     if not pipe.passed and pipe.x < bird.x:
                         pipe.passed = True
                         add_pipe = True
+                    
+                    pipe.move()
 
                 if add_pipe:
                     score += 1
@@ -130,8 +134,12 @@ class TestAI(Environment):
                     for genome in ge:
                         genome.fitness += 5
                     self.map.pipes.append(self.map.create_pipe())
+                    add_pipe = False
 
                 # Remove pipes that are off screen
+                    if score % SPEED_CHANGE_EVERY == 0:
+                        self.map.set_speed_map(self.map.PIPE_VEL + 1) # Increase the speed of the map every 5 points
+                        
                 for r in rem:
                     self.map.pipes.remove(r)
 
@@ -151,7 +159,7 @@ class TestAI(Environment):
             #At this point, all birds are extinct, but new generations will spawn
             # Remove all pipes when starting a new generation
             self.map.pipes = [self.map.create_pipe()]
-
+            self.map.set_to_default_speed()
         # Full evolution is complete
         # Run for up to 50 generations.
         winner = p.run(eval_genomes, 50)
