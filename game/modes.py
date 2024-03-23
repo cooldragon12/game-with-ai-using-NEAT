@@ -188,7 +188,7 @@ class Solo(Environment):
                     # redraw grame over prompt
                     self.game_over_prompt()
                 # user confirms decision
-                if event.key == pygame.K_RETURN:
+                if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
                     # restart                 
                     if self.selected_option == 0:
                         return self.restart()

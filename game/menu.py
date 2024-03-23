@@ -98,7 +98,7 @@ class  Menu:
                         self.selected_mode = (self.selected_mode - 1) % (len(
                             self.OPTIONS
                         ) + 1)
-                    if event.key == pygame.K_RETURN:
+                    if event.key == pygame.K_RETURN  or event.key == pygame.K_SPACE:
                         self.selected_mode_option()
                         break
 
