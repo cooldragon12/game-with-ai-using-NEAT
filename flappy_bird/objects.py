@@ -114,7 +114,7 @@ class Pipe:
     VEL = None  # default velocity
     """The velocity of the pipe"""
 
-    def __init__(self, x, img, velocity = VELOCITY_DEFAULT):
+    def __init__(self, x, img,mapname, velocity = VELOCITY_DEFAULT):
         self.x = x # The x position of the pipe
         self.height = 0 # The height of the pipe
         self.top = 0 # The top of the pipe
@@ -125,6 +125,12 @@ class Pipe:
 
         self.passed = False # If the bird has passed the pipe
         self.set_height() # Sets the height of the pipe
+        self.mapname = mapname
+        self.movement_state = random.uniform(0,1)
+        self.counter = 0 # lifetime of pipe
+        self.lowerlimit = int(random.randrange(-300,-200))
+        self.upperlimit = int(random.randrange(-550,-400))
+
 
         self.VEL = velocity
     def set_height(self):
@@ -136,6 +142,24 @@ class Pipe:
     def move(self):
         """Moves the pipe to the left"""
         self.x -= self.VEL
+        self.counter += 1
+        #print(self.mapname)
+        #uncomment this if you want to put this feature for a specific map
+        #if(self.mapname == "Batman"):
+        if True:   
+            #print(self.movement_state)
+            if self.counter > 30:      
+                #print(self.top)
+                if self.movement_state < 0.5 and (self.lowerlimit > self.top > self.upperlimit):
+                    # move pipe down
+                    self.top += 3
+                    self.bottom += 3
+                    pass
+                elif self.movement_state > 0.5 and (self.upperlimit < self.top < self.lowerlimit):
+                    # move pipe up
+                    self.top -= 3
+                    self.bottom -= 3
+                    pass
 
     def draw(self, win):
         """Draws the pipe on the window"""
@@ -163,10 +187,10 @@ class Pipe:
 
         return False
 
-    def create_clone(self, x, velocity = None):
+    def create_clone(self, x,mapname, velocity = None):
         """Creates a new instance of the pipe"""
         # Returns a new instance of the pipe with same parameters
-        return self.__class__(self.x + x, self.PIPE_BOTTOM, velocity)
+        return self.__class__(self.x + x, self.PIPE_BOTTOM,mapname, velocity)
 
 class Base:
     """ The base class for the floor and the background of the game """

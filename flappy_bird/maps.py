@@ -36,7 +36,7 @@ class Map(MapAbstract):
         return Map.__subclasses__()
 
     def create_pipe(self):
-        return self.pipes[0].create_clone(self.PIPE_GAP, self.PIPE_VEL)
+        return self.pipes[0].create_clone(self.PIPE_GAP,self.name, self.PIPE_VEL)
 
     def load_assets(self):
         """Loads the assets of the map"""
@@ -46,7 +46,7 @@ class Map(MapAbstract):
                 pygame.transform.scale(
                     pygame.image.load(os.path.join(MAP_ASSET_DIR, self.pipe)),
                     (52 * 2, 329 * 2),
-                ),
+                ),self.name,
                 self.PIPE_VEL
             )
         ]
