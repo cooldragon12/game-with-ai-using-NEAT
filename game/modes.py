@@ -89,7 +89,7 @@ class TestAI(Environment):
 
             run = True
             while run and len(birds) > 0:
-                clock.tick(240)                
+                clock.tick(TICK_RATE)                
                 pipe_ind = 0
                 if len(birds) > 0:
                     if len(self.map.pipes) > 1 and birds[0].x > self.map.pipes[0].x + self.map.pipes[0].PIPE_TOP.get_width():  # determine whether to use the first or second
@@ -164,6 +164,9 @@ class TestAI(Environment):
             # Remove all pipes when starting a new generation
             self.map.pipes = [self.map.create_pipe()]
             self.map.set_to_default_speed()
+            # Change map on reset
+            new_map = self.map.new_map()
+            self.map.change_map(new_map)
         # Full evolution is complete
         # Run for up to 50 generations.
         winner = p.run(eval_genomes, 50)
