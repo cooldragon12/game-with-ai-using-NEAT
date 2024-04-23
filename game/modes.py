@@ -262,17 +262,15 @@ class Solo(Environment):
             )
             self.win.blit(menu, (300, 317))
         pygame.display.update()
-
-
     
 class AIvsPlayer(Environment):
     """The environment class for the game"""
     def __init__(self, win, maps: MapHandler, char: Character):
         super().__init__(win, maps, char)
         self.ai = None
-        self.ai_character = Character.characters_available()[0](50, 670)
+        self.ai_character = Character.characters_available()[0](100, 670)
         self.ai_dead = False
-
+        self.ai_score = 0
     def collide_handler(self):
         self.is_finished = True
         self.game_over_prompt()
@@ -293,8 +291,6 @@ class AIvsPlayer(Environment):
                 return self.collide_handler()
                 pass
 
-        
-        
     def controls(self, event):
         """Handles the controls for the game"""
         if event.type == pygame.KEYDOWN:
@@ -403,7 +399,7 @@ class AIvsPlayer(Environment):
             pipe_ind = 0
             if not self.is_finished: # This will stop the game loop if the game is finished
                 if len(self.map.pipes) > 1 and self.ai_character.x > self.map.pipes[0].x + self.map.pipes[0].PIPE_TOP.get_width():  # determine whether to use the first or second
-                        pipe_ind = 1 # pipe on the screen for neural network input
+                    pipe_ind = 1 # pipe on the screen for neural network input
 
                 # send bird location, top pipe location and bottom pipe location and determine from network whether to jump or not
                 output = self.ai.activate((self.ai_character.y, abs(self.ai_character.y - self.map.pipes[pipe_ind].height), abs(self.ai_character.y - self.map.pipes[pipe_ind].bottom)))
@@ -414,6 +410,7 @@ class AIvsPlayer(Environment):
 
                 rem = []
                 add_pipe = False 
+                
                 for pipe in self.map.pipes:
                     # If the pipe is off the screen, remove it
                     if pipe.x + pipe.PIPE_TOP.get_width() < 0:
@@ -421,13 +418,18 @@ class AIvsPlayer(Environment):
                     # If the pipe is not passed and the character has passed it, add a new pipe
                     if not pipe.passed and pipe.x < self.char.x:
                         pipe.passed = True
+                        self.score += 1
                         add_pipe = True
-                    
+
+                    if not pipe.ai_passed and pipe.x < self.ai_character.x:
+                        pipe.ai_passed = True
+                        self.ai_score += 1
+
                     pipe.move()
+                    
                     
                 if add_pipe:
                     # If the character has passed the pipe, add a new pipe and increment the score
-                    self.score += 1
                     self.map.pipes.append(self.map.create_pipe())
                     add_pipe = False
                     
@@ -452,6 +454,9 @@ class AIvsPlayer(Environment):
         
         text = self.font.render("Score: " + str(self.score), 1, (255,255,255)) 
         self.win.blit(text, (WINDOW_WIDTH - 10 - text.get_width(), 10))
+        
+        text = self.font.render("AI Score: " + str(self.ai_score), 1, (255,255,255)) 
+        self.win.blit(text, (5, 10))
 
         self.map.floor.draw(self.win)
         self.char.draw(self.win)
@@ -469,5 +474,6 @@ class AIvsPlayer(Environment):
             self.ai_character.y = 350
             self.map.pipes = [self.map.create_pipe()]
             self.score = 0
+            self.ai_score = 0
             self.run()
             
