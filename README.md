@@ -18,7 +18,8 @@ NOTE: Use a python virtual environment to avoid conflicts with other packages.
 - Python 3.6 or higher
 - Pygame 2.0.1 or higher
 - NEAT-Python 0.92 or higher
-- Other package could be added once we reach the AI features
+- Tensorflow 2.16
+
 
 ## Usage
 To run the game, execute the following command:
@@ -63,13 +64,6 @@ It is divided into the following files:
 ### [main.py](main.py)
 Contains the driver code for the game. It initializes the game and runs the main game loop.
 
-## Missing Features
-Below is a list of features that are missing from the game:
-- [ ] Score functionality
-- [ ] Test AI -- The AI training
-- [ ] Game Over Screen
-- [ ] Pause functionality
-- [ ] Character Selection
-- [ ] AI vs. Player mode
+
 
 Note: Cchanges might be applied as we progress in the development of the game.
