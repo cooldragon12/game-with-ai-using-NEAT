@@ -21,7 +21,7 @@ class Bird(Character):
     ROT_VEL = 20
     ANIMATION_TIME = 4
     VEL = 5
-    NAME = "Birdy"
+    NAME = "Flappy"
     images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
 
 class Cat(Character):
@@ -29,7 +29,7 @@ class Cat(Character):
     ROT_VEL = 20
     ANIMATION_TIME = 1
     VEL = 5
-    NAME = "PussyCat"
+    NAME = "Meowy"
     images = ["cat\\cat1.png", "cat\\cat2.png", "cat\\cat3.png"]
 
 class Racoon(Character):
@@ -69,5 +69,5 @@ class Ghost(Character):
     ROT_VEL = 20
     ANIMATION_TIME = 4
     VEL = 5
-    NAME = "Naghost"
+    NAME = "Ghost"
     images = ["ghost\\ghost1.png", "ghost\\ghost1.png"]
