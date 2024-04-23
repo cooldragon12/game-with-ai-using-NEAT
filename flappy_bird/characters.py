@@ -15,25 +15,59 @@ from .objects import Character
 #     images = ["char_folder_name\\char1.png", "char_folder_name\\char2.png", "char_folder_name\\char3.png]
 #     
 
-class Whale(Character):
-    pass
 
 class Bird(Character):
     MAX_ROTATION = 25
     ROT_VEL = 20
     ANIMATION_TIME = 4
     VEL = 5
-    NAME = "Birdy"
+    NAME = "Flappy"
     images = ["bird\\bird1.png", "bird\\bird2.png", "bird\\bird3.png"]
 
-class Jellyfish(Character):
-    pass
+class Cat(Character):
+    MAX_ROTATION = 25
+    ROT_VEL = 20
+    ANIMATION_TIME = 1
+    VEL = 5
+    NAME = "Meowy"
+    images = ["cat\\cat1.png", "cat\\cat2.png", "cat\\cat3.png"]
+
+class Racoon(Character):
+    MAX_ROTATION = 25
+    ROT_VEL = 20
+    ANIMATION_TIME = 2
+    VEL = 5
+    NAME = "Thiefy"
+    images = ["racoon\\racoon1.png", "racoon\\racoon2.png", "racoon\\racoon3.png"]
+
+class Bunny(Character):
+    MAX_ROTATION = 25
+    ROT_VEL = 20
+    ANIMATION_TIME = 4
+    VEL = 5
+    NAME = "Glowy"
+    images = ["bunny\\bunny1.png", "bunny\\bunny1.png"]
 
 class Duck(Character):
-    pass
+    MAX_ROTATION = 25
+    ROT_VEL = 20
+    ANIMATION_TIME = 4
+    VEL = 5
+    NAME = "Key"
+    images = ["duck\\duck1.png", "duck\\duck2.png", "duck\\duck3.png"]
 
 class Fish(Character):
-    pass
+    MAX_ROTATION = 25
+    ROT_VEL = 20
+    ANIMATION_TIME = 4
+    VEL = 5
+    NAME = "Nemo"
+    images = ["fish\\fish1.png", "fish\\fish2.png", "fish\\fish3.png"]
 
 class Ghost(Character):
-    pass
+    MAX_ROTATION = 25
+    ROT_VEL = 20
+    ANIMATION_TIME = 4
+    VEL = 5
+    NAME = "Ghost"
+    images = ["ghost\\ghost1.png", "ghost\\ghost1.png"]

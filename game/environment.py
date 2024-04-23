@@ -1,7 +1,8 @@
+from calendar import c
 import pygame
-
+from flappy_bird import SPEED_CHANGE_EVERY
 from flappy_bird.maps import MapHandler
-from flappy_bird.objects import Character, Pipe
+from flappy_bird.objects import Character
 from game import WINDOW_WIDTH, TICK_RATE
 import time
 class Environment:
@@ -16,7 +17,7 @@ class Environment:
         self.font = pygame.font.Font("./assets/fonts/retropix.ttf", 20)
         self.score = 0
         self.selected_option = 0
-        self.last_screenshot_time =time.time()
+        self.last_screenshot_time = time.time()
 
     def loop(self):
         """Runs the game loop"""
@@ -48,7 +49,9 @@ class Environment:
                     self.score += 1
                     self.map.pipes.append(self.map.create_pipe())
                     add_pipe = False
-
+                    
+                    if self.score % SPEED_CHANGE_EVERY == 0:
+                        self.map.set_speed_map(self.map.PIPE_VEL + 1) # Increase the speed of the map every 5 points
                 # Remove the pipes that are off the screen
                 for r in rem:
                     self.map.pipes.remove(r)
@@ -108,7 +111,7 @@ class Environment:
         self.is_running = False
         print(self.is_running)
         # Calls loop to stop the while loop and return to menu
-        self.loop()
+        # removed the self.loop()
             
     
     def run(self):
@@ -129,4 +132,16 @@ class Environment:
         self.map.floor.draw(self.win)
         self.char.draw(self.win)
         pygame.display.set_caption("Flappy Bird")
+        pygame.display.update()
+    
+    @classmethod
+    def modes(cls):
+        return cls.__subclasses__()
+    
+    def clear(self):
+        self.char.x = 700 # temporary solutions which clear out the board
+        self.char.y = 600
+        self.char = None
+        self.map = None
+        
         pygame.display.update()

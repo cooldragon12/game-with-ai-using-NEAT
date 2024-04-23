@@ -4,6 +4,7 @@ import os
 import random
 from game import ASSET_DIR, MAP_ASSET_DIR, CHARACTER_ASSET_DIR
 from .abstracts import CharacterAbstract
+from flappy_bird import VELOCITY_DEFAULT
 
 STATS_FONT = pygame.font.SysFont("comicsans", 17)
 
@@ -13,7 +14,7 @@ class Character(CharacterAbstract):
     MAX_ROTATION = 25 # The maximum rotation of the character
     ROT_VEL = 1 # The rotation velocity
     ANIMATION_TIME = 4 # The time for the animation
-    VEL = 5 # Default velocity
+    VEL = 6 # Default velocity
     NAME = "Character"
     images = []
 
@@ -23,7 +24,6 @@ class Character(CharacterAbstract):
         self.IMGS = self.load_images()
         self.tilt = 0
         self.tick_count = 0
-        self.vel = 0 # velocity
         self.height = self.y
         self.img_count = 0 # Keeps track of the current image being displayed
         self.img = self.IMGS[0] # Current image being displayed
@@ -33,12 +33,12 @@ class Character(CharacterAbstract):
         # Checks if the images is not empty
         if not self.images:
             raise ValueError("The images property must not be empty")
-        return [pygame.transform.scale2x(pygame.image.load(os.path.join(CHARACTER_ASSET_DIR, self.images[i]))) for i in range(len(self.images))]
+        return [pygame.transform.scale(pygame.image.load(os.path.join(CHARACTER_ASSET_DIR, self.images[i])),(34*2,24*2)) for i in range(len(self.images))]
         
     
     def jump(self):
         """The jump method of the character"""
-        self.vel = -10.5
+        self.VEL = -10.5
         self.tick_count = 0
         self.height = self.y
 
@@ -46,7 +46,7 @@ class Character(CharacterAbstract):
         """Manages the movement of the character"""
         self.tick_count += 1
 
-        d = self.vel*self.tick_count + 1.4*self.tick_count**2 # how much the bird moves up or down 
+        d = self.VEL*self.tick_count + 1.4*self.tick_count**2 # how much the bird moves up or down 
 
         if d >= 14: # terminal velocity
             d = 14 # if the bird is moving down faster than 14 pixels, it will not move faster than 16 pixels
@@ -74,12 +74,12 @@ class Character(CharacterAbstract):
             self.img = self.IMGS[1]
             self.img_count = self.ANIMATION_TIME*2
 
-        # This renders the name over the head of the character
-        #name = STATS_FONT.render(self.NAME, 1, (255, 255, 255))
-        # parameter contains the name of the character, anti-aliasing value, and the color of the font by RGB values
-        # NOTICE: Font will need to be changed
-        # Code below will render the name of the character over the head of the character
-        #win.blit(name, (self.x + 10, self.y - 40)) # Renders it above and center of the character.
+        # # This renders the name over the head of the character
+        name = STATS_FONT.render(self.NAME, 1, (255, 255, 255))
+        # # parameter contains the name of the character, anti-aliasing value, and the color of the font by RGB values
+        # # NOTICE: Font will need to be changed
+        # # Code below will render the name of the character over the head of the character
+        win.blit(name, (self.x + 10, self.y - 40)) # Renders it above and center of the character.
         
         # Rotates the image of the character by the tilt value
         rotated_image = pygame.transform.rotate(self.img, self.tilt)
@@ -95,17 +95,26 @@ class Character(CharacterAbstract):
     def _image_count(self):
         """Returns the number of images in the sprite list"""
         return len(self.IMGS)
+    
+    @classmethod
+    def characters_available(cls):
+        """Returns the characters available"""
+        return cls.__subclasses__()
+
+    def set_default_pos(self):
+        self.x = 230
+        self.y = 350
 
 class Pipe:
     """The pipe class for the game"""
-    
-    # Generate pipe gaps based on a range
-    GAP = random.randrange(220,280)
 
-    VEL = 5
+    # Generate pipe gaps based on a range
+    GAP = random.randrange(210,280) # Gap between upper pipe and lower pipe
+
+    VEL = None  # default velocity
     """The velocity of the pipe"""
 
-    def __init__(self, x, img):
+    def __init__(self, x, img, velocity = VELOCITY_DEFAULT):
         self.x = x # The x position of the pipe
         self.height = 0 # The height of the pipe
         self.top = 0 # The top of the pipe
@@ -115,8 +124,11 @@ class Pipe:
         self.PIPE_BOTTOM = img # The bottom pipe
 
         self.passed = False # If the bird has passed the pipe
+        self.ai_passed = False # If the bird has passed the pipe
+        
         self.set_height() # Sets the height of the pipe
 
+        self.VEL = velocity
     def set_height(self):
         """Sets the height of the pipe"""
         self.height = random.randrange(50, 450)
@@ -126,12 +138,12 @@ class Pipe:
     def move(self):
         """Moves the pipe to the left"""
         self.x -= self.VEL
-    
+
     def draw(self, win):
         """Draws the pipe on the window"""
         win.blit(self.PIPE_TOP, (self.x, self.top))
         win.blit(self.PIPE_BOTTOM, (self.x, self.bottom))
-    
+
     def collide(self, bird):
         """Returns True if a collision occurs
         
@@ -152,15 +164,15 @@ class Pipe:
             return True
 
         return False
-    
-    def create_clone(self, x):
+
+    def create_clone(self, x, velocity = None):
         """Creates a new instance of the pipe"""
         # Returns a new instance of the pipe with same parameters
-        return self.__class__(self.x + x, self.PIPE_BOTTOM)
-    
+        return self.__class__(self.x + x, self.PIPE_BOTTOM, velocity)
+
 class Base:
     """ The base class for the floor and the background of the game """
-    VEL = 5 # default velocity
+    VEL = VELOCITY_DEFAULT # default velocity
     WIDTH = None
     IMG = None
 
@@ -190,13 +202,13 @@ class Base:
 
 class Floor(Base):
     """The floor of the game"""
-    VEL = 5 # default velocity
+    VEL = VELOCITY_DEFAULT  # default velocity
     """The velocity of the floor movement from right to left"""
 
     def __init__(self, y, base , velocity = None):
         super().__init__(y, base, velocity)
-        self.VEL = velocity if velocity else self.VAL
-    
+        self.VEL = velocity if velocity else VELOCITY_DEFAULT
+
     def collide(self, bird):
         """Returns True if the bird has collided with the floor"""
         if bird.y + bird.img.get_height() >= self.y:
@@ -205,7 +217,7 @@ class Floor(Base):
 
 # class Background(Base):
 #     """The background of the game
-    
+
 #     This is not integrated yet need to modify to use the animation brackground
 #     """
 #     VEL = 5
