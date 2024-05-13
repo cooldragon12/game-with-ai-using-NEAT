@@ -88,78 +88,77 @@ class TestAI(Environment):
             clock = pygame.time.Clock()
 
             run = True
-            while run and len(birds) > 0:
+            while run and len(birds) > 0 :
                 clock.tick(TICK_RATE)                
                 pipe_ind = 0
                 if len(birds) > 0:
                     if len(self.map.pipes) > 1 and birds[0].x > self.map.pipes[0].x + self.map.pipes[0].PIPE_TOP.get_width():  # determine whether to use the first or second
                         pipe_ind = 1 # pipe on the screen for neural network input
                     
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        run = False
-                        pygame.quit()
-                        quit()
-                        break
-                for x, bird in enumerate(birds):  # give each bird a fitness of 0.1 for each frame it stays alive
-                    ge[x].fitness += 0.1
-                    bird.move()
+                self._controls_loop()
+                if not self.is_paused:
+                    for x, bird in enumerate(birds):  # give each bird a fitness of 0.1 for each frame it stays alive
+                        ge[x].fitness += 0.1
+                        bird.move()
 
-                    # send bird location, top pipe location and bottom pipe location and determine from network whether to jump or not
-                    output = nets[birds.index(bird)].activate((bird.y, abs(bird.y - self.map.pipes[pipe_ind].height), abs(bird.y - self.map.pipes[pipe_ind].bottom)))
-                    
+                        # send bird location, top pipe location and bottom pipe location and determine from network whether to jump or not
+                        output = nets[birds.index(bird)].activate((bird.y, abs(bird.y - self.map.pipes[pipe_ind].height), abs(bird.y - self.map.pipes[pipe_ind].bottom)))
+                        
 
-                    if output[0] > 0.5:  # we use a tanh activation function so result will be between -1 and 1. if over 0.5 jump
-                        bird.jump()
-                rem = []
-                add_pipe = False
-                self.map.floor.move() # Handles the movement of the floor
-                for pipe in self.map.pipes:
-                    # check for collision
+                        if output[0] > 0.5:  # we use a tanh activation function so result will be between -1 and 1. if over 0.5 jump
+                            bird.jump()
+                    rem = []
+                    add_pipe = False
+                    self.map.floor.move() # Handles the movement of the floor
+                    for pipe in self.map.pipes:
+                        # check for collision
+                        for bird in birds:
+                            if pipe.collide(bird):
+                                ge[birds.index(bird)].fitness -= 1
+                                nets.pop(birds.index(bird))
+                                ge.pop(birds.index(bird))
+                                birds.pop(birds.index(bird))
+
+                        if pipe.x + pipe.PIPE_TOP.get_width() < 0:
+                            rem.append(pipe)
+
+                        if not pipe.passed and pipe.x < bird.x:
+                            pipe.passed = True
+                            add_pipe = True
+                        
+                        pipe.move()
+
+                    if add_pipe:
+                        score += 1
+                        # can add this line to give more reward for passing through a pipe (not required)
+                        for genome in ge:
+                            genome.fitness += 5
+                        self.map.pipes.append(self.map.create_pipe())
+                        add_pipe = False
+
+                    # Remove pipes that are off screen
+                        if score % SPEED_CHANGE_EVERY == 0:
+                            self.map.set_speed_map(self.map.PIPE_VEL + 1) # Increase the speed of the map every 5 points
+                            
+                    for r in rem:
+                        self.map.pipes.remove(r)
+
                     for bird in birds:
-                        if pipe.collide(bird):
-                            ge[birds.index(bird)].fitness -= 1
+                        if bird.y + bird.img.get_height() - 10 >= FLOOR or bird.y < -50:
                             nets.pop(birds.index(bird))
                             ge.pop(birds.index(bird))
                             birds.pop(birds.index(bird))
 
-                    if pipe.x + pipe.PIPE_TOP.get_width() < 0:
-                        rem.append(pipe)
-
-                    if not pipe.passed and pipe.x < bird.x:
-                        pipe.passed = True
-                        add_pipe = True
+                    # break if score gets large enough
+                    """ if score > 200:
+                        pickle.dump(nets[0],open("best.pickle", "wb"))
+                        break """
                     
-                    pipe.move()
-
-                if add_pipe:
-                    score += 1
-                    # can add this line to give more reward for passing through a pipe (not required)
-                    for genome in ge:
-                        genome.fitness += 5
-                    self.map.pipes.append(self.map.create_pipe())
-                    add_pipe = False
-
-                # Remove pipes that are off screen
-                    if score % SPEED_CHANGE_EVERY == 0:
-                        self.map.set_speed_map(self.map.PIPE_VEL + 1) # Increase the speed of the map every 5 points
-                        
-                for r in rem:
-                    self.map.pipes.remove(r)
-
-                for bird in birds:
-                    if bird.y + bird.img.get_height() - 10 >= FLOOR or bird.y < -50:
-                        nets.pop(birds.index(bird))
-                        ge.pop(birds.index(bird))
-                        birds.pop(birds.index(bird))
-
-                # break if score gets large enough
-                """ if score > 200:
-                    pickle.dump(nets[0],open("best.pickle", "wb"))
-                    break """
-                
-                self.draw(win,birds,score,gen,pipe_ind)
-
+                    self.draw(win,birds,score,gen,pipe_ind)
+                if self.is_finished:
+                    run= False
+            if self.is_finished:
+                raise InterruptedError("Exiting mode")
             #At this point, all birds are extinct, but new generations will spawn
             # Remove all pipes when starting a new generation
             self.map.pipes = [self.map.create_pipe()]
@@ -169,14 +168,96 @@ class TestAI(Environment):
             self.map.change_map(new_map)
         # Full evolution is complete
         # Run for up to 50 generations.
-        winner = p.run(eval_genomes, 50)
-
+        try:
+            winner = p.run(eval_genomes, 50)
+            print('\nBest genome:\n{!s}'.format(winner))
+            """ with open("winner.pkl", "wb") as f:
+                pickle.dump(winner, f)
+                f.close() """
+        except InterruptedError:
+            pass
         # show final stats
-        print('\nBest genome:\n{!s}'.format(winner))
-        """ with open("winner.pkl", "wb") as f:
-            pickle.dump(winner, f)
-            f.close() """
 
+    def controls(self, event):
+        if event.type == pygame.KEYDOWN:
+            if not self.is_finished:
+                if event.key == pygame.K_ESCAPE:
+                    self.is_paused = True
+                    self.game_over_prompt()
+            
+            if self.is_paused:
+                if event.key == pygame.K_LEFT:
+                    # user selects restart
+                    self.selected_option = 0
+                    # redraw grame over prompt
+                    self.game_over_prompt()
+                if event.key == pygame.K_RIGHT:
+                    # user selects exit
+                    self.selected_option = 1
+                    # redraw grame over prompt
+                    self.game_over_prompt()
+                if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
+                    # restart                 
+                    if self.selected_option == 0:
+                        self.is_paused = False
+                    # exit to menu
+                    else:
+                        self.is_finished = True
+                        return  self.exit_mode()
+                       
+            
+    def game_over_prompt(self):
+        """This will prompt the game over message"""
+        # draw game over title
+        gameover_font = pygame.font.Font("./assets/fonts/Minercraftory.ttf", 45)
+        if self.is_paused:
+            gameover_text = gameover_font.render("PAUSED", True, (255, 255, 255))
+        if self.is_finished:
+            gameover_text = gameover_font.render("GAME OVER", True, (255, 255, 255))
+        gameover_text_rect = gameover_text.get_rect(center=(WINDOW_WIDTH/2, 150))
+        self.win.blit(gameover_text, gameover_text_rect)
+        # draw score
+        score_font = pygame.font.Font("./assets/fonts/Minercraftory.ttf", 25)
+        score_text = score_font.render("Score " + str(self.score), 1, (255,255,255)) 
+        score_text_rect = score_text.get_rect(center=(WINDOW_WIDTH/2, 220))
+        self.win.blit(score_text, score_text_rect)
+        # draws rectangle
+        # rectangle border
+        pygame.draw.rect(self.win, (214,168,74), (45, 245, 410, 210), border_radius=10)
+        # rectangle bezel
+        pygame.draw.rect(self.win, (255,234,163), (50, 250, 400, 200), border_radius=10)
+        # rectangle bezel inside border
+        pygame.draw.rect(self.win, (214,168,74), (61, 261, 378, 178), border_radius=10)
+        # rectangle inside
+        pygame.draw.rect(self.win, (255,234,163), (65, 265, 370, 170), border_radius=10)
+        # draw play button
+        play = pygame.image.load('./assets/general/play.svg')
+        # scale button if it's selected
+        if(self.selected_option == 0):
+            play = pygame.transform.scale(
+                play, (60,65)
+            )
+            self.win.blit(play, (125, 312))
+        else:
+            play = pygame.transform.scale(
+                play, (50,55)
+            )
+            self.win.blit(play, (130, 317))
+        # draw menu button
+        menu = pygame.image.load('./assets/general/menu.svg')
+        # scale button if it's selected
+        if(self.selected_option == 1):
+            menu = pygame.transform.scale(
+                menu, (60,65)
+            )
+            self.win.blit(menu, (295, 312))
+        else:
+            menu = pygame.transform.scale(
+                menu, (50,55)
+            )
+            self.win.blit(menu, (300, 317))
+        pygame.display.update()
+        
 class Solo(Environment):
     def collide_handler(self):
         self.is_finished = True
@@ -207,18 +288,43 @@ class Solo(Environment):
                         return self.exit_mode()
 
 
-            if not self.is_finished:     
+            if not self.is_finished:   
                 if event.key == pygame.K_SPACE:
                     return self.char.jump()
                 
-                # if event.key == pygame.K_ESCAPE:
-                #     return self.game_over_prompt()
+                if event.key == pygame.K_HOME or event.key == pygame.K_ESCAPE:
+                    self.is_paused = True
+                    self.game_over_prompt()
+                
+            if self.is_paused:
+                if event.key == pygame.K_LEFT:
+                    # user selects restart
+                    self.selected_option = 0
+                    # redraw grame over prompt
+                    self.game_over_prompt()
+                if event.key == pygame.K_RIGHT:
+                    # user selects exit
+                    self.selected_option = 1
+                    # redraw grame over prompt
+                    self.game_over_prompt()
+                if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
+                    # restart                 
+                    if self.selected_option == 0:
+                        self.is_paused = False
+                        return
+                    # exit to menu
+                    else:
+                        return self.exit_mode()
                 
     def game_over_prompt(self):
         """This will prompt the game over message"""
         # draw game over title
         gameover_font = pygame.font.Font("./assets/fonts/Minercraftory.ttf", 45)
-        gameover_text = gameover_font.render("GAME OVER", True, (255, 255, 255))
+        if self.is_paused:
+            gameover_text = gameover_font.render("PAUSED", True, (255, 255, 255))
+        if self.is_finished:
+            gameover_text = gameover_font.render("GAME OVER", True, (255, 255, 255))
+
         gameover_text_rect = gameover_text.get_rect(center=(WINDOW_WIDTH/2, 150))
         self.win.blit(gameover_text, gameover_text_rect)
         # draw score
@@ -282,14 +388,12 @@ class AIvsPlayer(Environment):
 
         if self.map.floor.collide(self.char):
             return self.collide_handler()
-            pass
         
         for pipe in self.map.pipes:
             if pipe.collide(self.ai_character):
                 self.ai_dead = True
             if pipe.collide(self.char):
                 return self.collide_handler()
-                pass
 
     def controls(self, event):
         """Handles the controls for the game"""
@@ -320,14 +424,37 @@ class AIvsPlayer(Environment):
                 if event.key == pygame.K_SPACE:
                     return self.char.jump()
                 
-                # if event.key == pygame.K_ESCAPE:
-                #     return self.game_over_prompt()
-                
+                if event.key == pygame.K_ESCAPE:
+                    self.is_paused= True
+                    return self.game_over_prompt()
+
+            if self.is_paused:
+                if event.key == pygame.K_LEFT:
+                    # user selects restart
+                    self.selected_option = 0
+                    # redraw grame over prompt
+                    self.game_over_prompt()
+                if event.key == pygame.K_RIGHT:
+                    # user selects exit
+                    self.selected_option = 1
+                    # redraw grame over prompt
+                    self.game_over_prompt()
+                if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
+                    # restart                 
+                    if self.selected_option == 0:
+                        self.is_paused = False
+                        return
+                    # exit to menu
+                    else:
+                        return self.exit_mode()
     def game_over_prompt(self):
         """This will prompt the game over message"""
         # draw game over title
         gameover_font = pygame.font.Font("./assets/fonts/Minercraftory.ttf", 45)
-        gameover_text = gameover_font.render("GAME OVER", True, (255, 255, 255))
+        if self.is_paused:
+            gameover_text = gameover_font.render("PAUSED", True, (255, 255, 255))
+        if self.is_finished:
+            gameover_text = gameover_font.render("GAME OVER", True, (255, 255, 255))
         gameover_text_rect = gameover_text.get_rect(center=(WINDOW_WIDTH/2, 150))
         self.win.blit(gameover_text, gameover_text_rect)
         # draw score
@@ -397,7 +524,7 @@ class AIvsPlayer(Environment):
 
             self._collided() # Handles the collides of the character with the floor and pipes
             pipe_ind = 0
-            if not self.is_finished: # This will stop the game loop if the game is finished
+            if not self.is_finished and not self.is_paused: # This will stop the game loop if the game is finished
                 if len(self.map.pipes) > 1 and self.ai_character.x > self.map.pipes[0].x + self.map.pipes[0].PIPE_TOP.get_width():  # determine whether to use the first or second
                     pipe_ind = 1 # pipe on the screen for neural network input
 
