@@ -129,7 +129,7 @@ class MapCity(Map):
 
     name = "City"
     pipe = "2\\pipe.png"
-    floor = "2\\floor.png"
+    floor = "6\\floor.png"
     bg = "2\\bg.png"
     PIPE_VEL = VELOCITY_DEFAULT
     PIPE_GAP = 400

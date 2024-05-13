@@ -13,6 +13,7 @@ class Environment:
         self.char = char
         self.is_running = True
         self.is_finished = False
+        self.is_paused = False
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font("./assets/fonts/retropix.ttf", 20)
         self.score = 0
@@ -30,7 +31,7 @@ class Environment:
 
             self._collided() # Handles the collides of the character with the floor and pipes
             
-            if not self.is_finished: # This will stop the game loop if the game is finished
+            if not self.is_finished and not self.is_paused: # This will stop the game loop if the game is finished
                 rem = []
                 add_pipe = False 
                 for pipe in self.map.pipes:
@@ -60,6 +61,9 @@ class Environment:
                 self.map.floor.move() # Handles the movement of the floor
 
                 self.draw() # Draws the game
+            
+                
+            
         print("game is no longer running")
             
 
@@ -118,6 +122,7 @@ class Environment:
         """Runs the menu loop"""
         self.is_finished = False
         self.is_running = True
+        self.is_paused = False
         self.loop()
             
     def draw(self):
